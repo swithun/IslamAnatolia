@@ -1,0 +1,234 @@
+/*
+
+Need to prepent #content to all rules, so that they only target
+stuff inside the div#content.
+
+WordPress sets everything to 0, so need to set margins and padding for
+stuff.
+
+*/
+
+#content {
+  width: 100%;
+	min-height: 625px;
+}
+
+#content h1, #content  h2, #content #content h3, #content h4, #content th, #content dd {
+  font-family: Geneva, Arial, sans-serif;
+}
+
+#content p, #content li, #content td, #content dt {
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#content ul.navigation li, #content ul.version_list li {
+  list-style: none;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	margin: 0 1em;
+}
+
+#content p.login {
+	float: right;
+}
+
+#content p.error {
+  color: #a00;
+	font-weight: bold;
+}
+
+#content p.success {
+  color: #0a0;
+	font-weight: bold;
+}
+
+#content dl.hit_list em {
+  background-color: #ff0;
+}
+
+#content hr {
+  clear: both;
+}
+
+#content dt {
+  font-weight: bold;
+}
+
+#content dd {
+  margin-left: 2em;
+	margin-bottom: 1em;
+	line-height: 2em;
+}
+
+#content a {
+  color: #00f;
+	/*text-decoration: underline;*/
+}
+
+/* by default only show top X number of facet values  */
+.following {
+  display: none;
+}
+
+.work_note {
+  background-color: #f7f5f2;
+	padding: 1em;
+}
+
+/* pretty printing 
+
+#content span.pp_punct { color: #333; }
+#content span.pp_element { color: #909; }
+#content span.pp_att_name { color: #009; }
+#content span.pp_att_value { color: #090; }*/
+
+/* line numbers in PRE */
+/* http://jsfiddle.net/tovic/AbpRD/ 
+#content pre {
+	margin:0 0 1em;
+	padding:.5em 1em;
+}
+
+#content pre code,
+#content pre .line-number {
+	font: normal normal 12px/14px "Courier New", Courier, Monospace;
+	color: black;
+	display: block;
+}
+
+#content pre .line-number {
+  float: left;
+	margin: 0 1em 0 -1em;
+	border-right: 1px solid;
+	text-align: right;
+}
+
+#content pre .line-number span {
+  display: block;
+	padding: 0 .5em 0 1em;
+}
+
+#content pre .cl {
+  display: block;
+	clear: both;
+}*/
+
+/* styling for TEI overlay 
+#content div.tei_overlay {
+  display: none;
+	z-index: 10000;
+  width: 50%;
+	height: 600px;
+	float: right;
+	overflow: auto;
+  background-color:#eee;
+	-moz-box-shadow:0 0 90px 5px #000;
+	-webkit-box-shadow: 0 0 90px #000;
+	position:relative;
+}*/
+
+/* close overlay button 
+#content div.tei_overlay .close {
+  background-image: url(close.png);
+ background-repeat: no-repeat;
+ background-position: right top;
+	position: fixed;
+	right: 24%;
+	top: 60px;
+	cursor: pointer;
+	height: 35px;
+	width: 35px;
+	z-index:10001;
+	margin: auto;
+	
+}*/
+
+#content .highlight {
+  background-color: #ff0;
+}
+
+#content span.note_element {
+  border-bottom: 1px dashed;
+}
+
+#content span.title {
+  font-style: italic;
+}
+
+.foreign { font-size: large; }
+
+/*mlw2 added*/
+div#content p.login {margin-right: 10px;}
+
+/*facets to choose from*/
+div#facets_left {float: left; width: 250px;}
+div.facet_group { margin: 1em 0px;-webkit-border-radius: 10px 10px 0px 0px;-moz-border-radius: 10px 10px 0px 0px;border-radius: 10px 10px 0px 0px; border: 1px solid #ddd }
+div.facet_group>p:first-child {margin: 0; padding: 5px; -webkit-border-radius: 10px 10px 0px 0px;-moz-border-radius: 10px 10px 0px 0px;border-radius: 10px 10px 0px 0px; border-bottom: 1px solid #ddd; background:#f7f5f2 none}
+div.facet_group>ul {padding: 0px 5px 5px;}
+div.facet_group>ul>li {margin: 0; padding: 2px 0; text-align:left}
+div.facet_group>ul>li:first-of-type {padding-top: 4px;}
+
+/*search result listings */
+div#resultset{margin: 1em 0 0 260px;}
+div#resultset>h3{clear: none;}
+div#resultset ul#hits {margin: 0 0 10px; }
+div#resultset ul#hits>li {margin: 5px 0 10px; padding: 10px 0 0; border: 1px solid #ddd; -webkit-border-radius: 10px ;-moz-border-radius: 10px ;border-radius: 10px;}
+div#resultset ul#hits>li>div.hit_title {border-bottom: 1px solid #ddd; font-size: 1.1em; font-weight: bolder; }
+div#resultset ul#hits>li>div.hit_title, div#resultset ul#hits>li>div.hit_author,div#resultset ul#hits>li>div.hit_ms{padding: 5px 10px;}
+div#resultset ul#hits>li>div.hit_author span:before{ content:"\A"; white-space:pre; 
+}
+div#resultset ul#hits>li>div.hit_author span:first-child:before{content:""}
+
+div#resultset ul#hits>li>div.hit_ms{}
+
+div#resultset ul#paging {display: block; margin: 10px 0;}
+div#resultset ul#paging>li {float: left; margin-right: 10px; }
+div#resultset ul#paging:after {content: "."; 
+color: white; display: block;clear: both;}
+
+/*search box*/
+div#srch_manscrpts { clear: left; margin: 10px 260px; padding: 5px;  -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border: 1px solid #B9EABD;}
+div#srch_manscrpts>h3 {text-align:center; clear:none;}
+div#srch_manscrpts p label:first-child {width: 90px;  margin-right: 15px; display: inline-block;}
+div#srch_manscrpts form input[type="submit"], div#srch_manscrpts>p:last-child  {margin-left: 110px;}
+div#srch_manscrpts:after {content: "."; 
+color: white; display: block;}
+
+div.article>h3:first-child,div#srch_manscrpts>h3:first-child,div#resultset>h3:first-child {color: #333377; font-weight: bold; text-align:center; font-size:1.3em }
+
+/*individual result pages*/
+div#content div.list_container>h3 {}
+div#content div.list_container>dl {margin: 5px 10%;}
+div#content div.list_container>dl>dt,div#content div.list_container>dl>dd {margin: 0; padding:5px 10px}
+div#content div.list_container>dl>dt,div#content div.list_container>dl>dt+dt:last-of-type {float: left; /*width: 200px;*/ clear: left; }
+div#content div.list_container>dl>dt+dt {float: none; width: 200px; clear: left; }
+div#content div.list_container>dl>dd {padding-left: 230px;}
+div#content div.list_container>dl>dd:nth-of-type(even) {background-color: #f7f5f2}
+
+div#content div.list_container>dl>dd>dl {margin: 10px 0; clear:left;}
+div#content div.list_container>dl>dd>dl dt {margin-top: 10px }
+div#content div.list_container>dl>dd>dl dt:first-child {margin-top: 0 }
+div#content div.list_container>dl>dd>dl>dd {}
+div#content div.list_container>dl>dd>dl dl {margin-top: 10px;}
+
+/*dealing with foreign script*/
+div#content .foreign, div#content [title='foreign'] {font-size: 1.5em; padding: 3px }
+div#content div.hit_author span.ara>a {font-size: 1.5em; padding: 3px }
+
+/* bibliography list */
+dd.bib_list { margin-bottom: 1em; }
+
+/*20160304 mlw2*/
+div#content dl#accordion dt.accordion_header {color: #00F; text-decoration: underline; cursor:pointer; 
+	}
+	div#content dl#accordion dt.accordion_header::before {content: "+";font-size:1.25em; display: inline-block; width: 15px; text-align:center; }
+	
+	div#content dl#accordion dt.ui-accordion-header-active {color: #F00; }
+	div#content dl#accordion dt.ui-accordion-header-active::before {content: "-"; }
+
+/* make bibliography sub-headings smaller */
+div#content dt.bib_subheading {
+  font-size: smaller;
+	margin-left: 2em;
+}

@@ -1,0 +1,5 @@
+#AuthType shibboleth
+#ShibRequireSession On
+#ShibUseHeaders On
+#require user add usernames here
+

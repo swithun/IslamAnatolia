@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# use document IDs in URLs
+RewriteBase /~anatolia/data/
+RewriteRule ^documents/([^/]*)/(.*)\.(xml|pdf)$document.php?name=$2&type=$1&format=$3 [L]
+RewriteRule ^documents/(.*)\.(pdf|xml)$ document.php?name=$1&format=$2 [L]
+RewriteRule ^documents/([^/]*)/(.*)$ document.php?name=$2&type=$1 [L]
+RewriteRule ^documents/(.*)$ document.php?name=$1 [L]
