@@ -16,33 +16,33 @@
 
 // array of form field names and their corresponding Solr fields
 $facets = array("author" => "work_author_s", 
-								"date" => "work_date_created_start",
-								"copying_date" => "work_date_copy_start",
-								"creation_place" => "work_creation_place_s", 
-								"copying_place" => "work_copy_place_s", 
-								"subject_geographic" => "work_auth_geographic",
-								"subject_topic" => "work_auth_topic", 
-								//"subject_time" => "work_auth_temporal",
-								"country" => "ms_physical_location_country", 
-								"settlement" => "ms_physical_location_settlement",
-								"institution" => "ms_physical_location_institution", 
-								//"repository" => "ms_physical_location_repository",
-								"collection" => "ms_physical_location_collection",
-								"language" => "work_language",
-								"script" => "work_script",
-								"type" => "doc_type",
-								"authtype" => "auth_type");
+                "date" => "work_date_created_start",
+                "copying_date" => "work_date_copy_start",
+                "creation_place" => "work_creation_place_s", 
+                "copying_place" => "work_copy_place_s", 
+                "subject_geographic" => "work_auth_geographic",
+                "subject_topic" => "work_auth_topic", 
+                //"subject_time" => "work_auth_temporal",
+                "country" => "ms_physical_location_country", 
+                "settlement" => "ms_physical_location_settlement",
+                "institution" => "ms_physical_location_institution", 
+                //"repository" => "ms_physical_location_repository",
+                "collection" => "ms_physical_location_collection",
+                "language" => "work_language",
+                "script" => "work_script",
+                "type" => "doc_type",
+                "authtype" => "auth_type");
 
 // fields which don't use quotes
 $noQuoteFields = array("work_date_created_start", "work_date_copy_start", 
-											 "text", "title", "author", "note", "work_author_main",
-											 "author_note_place", "work_note_place",
-											 "ms_identifier_idno", "place");
+                       "text", "title", "author", "note", "work_author_main",
+                       "author_note_place", "work_note_place",
+                       "ms_identifier_idno", "place");
 
 // fields to sort on
 $sortFields = array("title" => "title_sort",
-										"classmark" => "id",
-										"relevance" => "score");
+                    "classmark" => "id",
+                    "relevance" => "score");
 
 // used in joins
 $joinFmt = '_query_:"{!join from=%s to=%s v=$%s}"';
@@ -62,13 +62,13 @@ $workParentID = "work_parent_id";
  ******
  */
 function formatDate($dates, $dateFormat, $gap) { //{{{
-		foreach ($dates as $i => $d) {
-				$dates[$i] = sprintf("[%s TO %s]",
-														 sprintf($dateFormat, $dates[$i]),
-														 sprintf($dateFormat, $dates[$i] + $gap));
-		}
-		
-		return $dates;
+    foreach ($dates as $i => $d) {
+        $dates[$i] = sprintf("[%s TO %s]",
+                             sprintf($dateFormat, $dates[$i]),
+                             sprintf($dateFormat, $dates[$i] + $gap));
+    }
+    
+    return $dates;
 }
 //}}}
 
@@ -86,57 +86,57 @@ function formatDate($dates, $dateFormat, $gap) { //{{{
  ******
  */
 function formatField($fields, $values, $op = " AND ") { //{{{
-		global $noQuoteFields;
-		
-		$format = "%s:%s%s%s^%d";
-		
-		$fields = is_array($fields) ? $fields : array($fields => 1);
-		
-		$valueTerms = array();
+    global $noQuoteFields;
+    
+    $format = "%s:%s%s%s^%d";
+    
+    $fields = is_array($fields) ? $fields : array($fields => 1);
+    
+    $valueTerms = array();
 
-		// values is 2D array, so $op everything, disjoining on fields
-		// used for text input queries
-		if (isset($values[0]) && is_array($values[0])) {
-				foreach ($values as $val) {
-						foreach ((array) $val as $v) {
-								$fieldTerms = array();
-								
-								// loop over fields, looking for value in each field
-								foreach ($fields as $f => $b) {
-										// don't quote *s or values in noQuoteFields
-										$q = "*" == $v || in_array($f, $noQuoteFields) ? "" : '"';
-										
-										$fieldTerms[] = sprintf($format,
-																						$f, $q, $v, $q, $b);
-								}
-								
-								// disjoin searches for current value in each field
-								$valueTerms[] = sprintf("(%s)", implode(" OR ", $fieldTerms));
-						}
-				}
-		}
-		// values is 1D array - assumes that fields only has 1 element
-		// essentially disjoin values
-		// used for facets
-		else {
-				$fieldTerms = array();
-				foreach ($values as $val) {
-						// loop over fields, looking for value in each field
-						foreach ($fields as $f => $b) {
-								// don't quote *s or values in noQuoteFields
-								$q = "*" == $val || in_array($f, $noQuoteFields) ? "" : '"';
-								
-								$fieldTerms[] = sprintf($format,
-																				$f, $q, $val, $q, $b);
-						}
-				}
-				
-				// disjoin searches for current value in each field
-				$valueTerms[] = sprintf("(%s)", implode(" OR ", $fieldTerms));
-		}
+    // values is 2D array, so $op everything, disjoining on fields
+    // used for text input queries
+    if (isset($values[0]) && is_array($values[0])) {
+        foreach ($values as $val) {
+            foreach ((array) $val as $v) {
+                $fieldTerms = array();
+                
+                // loop over fields, looking for value in each field
+                foreach ($fields as $f => $b) {
+                    // don't quote *s or values in noQuoteFields
+                    $q = "*" == $v || in_array($f, $noQuoteFields) ? "" : '"';
+                    
+                    $fieldTerms[] = sprintf($format,
+                                            $f, $q, $v, $q, $b);
+                }
+                
+                // disjoin searches for current value in each field
+                $valueTerms[] = sprintf("(%s)", implode(" OR ", $fieldTerms));
+            }
+        }
+    }
+    // values is 1D array - assumes that fields only has 1 element
+    // essentially disjoin values
+    // used for facets
+    else {
+        $fieldTerms = array();
+        foreach ($values as $val) {
+            // loop over fields, looking for value in each field
+            foreach ($fields as $f => $b) {
+                // don't quote *s or values in noQuoteFields
+                $q = "*" == $val || in_array($f, $noQuoteFields) ? "" : '"';
+                
+                $fieldTerms[] = sprintf($format,
+                                        $f, $q, $val, $q, $b);
+            }
+        }
+        
+        // disjoin searches for current value in each field
+        $valueTerms[] = sprintf("(%s)", implode(" OR ", $fieldTerms));
+    }
 
-		// join groups of value queries using operator
-		return sprintf("(%s)", implode($op, $valueTerms));
+    // join groups of value queries using operator
+    return sprintf("(%s)", implode($op, $valueTerms));
 }
 //}}}
 
@@ -161,62 +161,62 @@ function formatField($fields, $values, $op = " AND ") { //{{{
  ******
  */
 function removeFacets(&$params, $dateFormat, $gap) { //{{{
-		global $facets;
-		
-		$removed = false;
+    global $facets;
+    
+    $removed = false;
 
-		// check for facet to remove from query
-		if (isset($_REQUEST["remove_facet"])) {
-				unset($_REQUEST[$_REQUEST["remove_facet"]]);
-				unset($_REQUEST["remove_facet"]);
-		}
-		
-		// can remove offset
-		if (isset($_REQUEST["offset"])) {
-				unset($_REQUEST["offset"]);
-		}
-		
-		// check for facets being used
-		foreach ($facets as $f => $field) {
-				// not using this facet to search on, so skip
-				if (!isset($_REQUEST[$f]) || "" == $_REQUEST[$f]) {
-						continue;
-				}
-				
-				// using this facet, so remove it from list
-				unset($facets[$f]);
-				
-				// get value and cast as array
-				$value = (array) $_REQUEST[$f];
-				
-				switch ($f) {
-				 case "date":
-				 case "copying_date":
-						// convert year into Solr range
-						$value = formatDate($value, $dateFormat, $gap);
-						break;
-						
-						// physical location fields
-						// if searching on more specific field, no longer interested in less specific ones
-				 case "collection":
-						unset($facets["repository"]);
-				 case "repository":
-						unset($facets["institution"]);
-				 case "institution":
-						unset($facets["settlement"]);
-				 case "settlement":
-						unset($facets["country"]);
-				 default:
-						break;
-				}
-				
-				$params[$field] = $value;
-				
-				// have removed facet/s
-				$removed = true;
-		}
-		
-		return $removed;
+    // check for facet to remove from query
+    if (isset($_REQUEST["remove_facet"])) {
+        unset($_REQUEST[$_REQUEST["remove_facet"]]);
+        unset($_REQUEST["remove_facet"]);
+    }
+    
+    // can remove offset
+    if (isset($_REQUEST["offset"])) {
+        unset($_REQUEST["offset"]);
+    }
+    
+    // check for facets being used
+    foreach ($facets as $f => $field) {
+        // not using this facet to search on, so skip
+        if (!isset($_REQUEST[$f]) || "" == $_REQUEST[$f]) {
+            continue;
+        }
+        
+        // using this facet, so remove it from list
+        unset($facets[$f]);
+        
+        // get value and cast as array
+        $value = (array) $_REQUEST[$f];
+        
+        switch ($f) {
+         case "date":
+         case "copying_date":
+            // convert year into Solr range
+            $value = formatDate($value, $dateFormat, $gap);
+            break;
+            
+            // physical location fields
+            // if searching on more specific field, no longer interested in less specific ones
+         case "collection":
+            unset($facets["repository"]);
+         case "repository":
+            unset($facets["institution"]);
+         case "institution":
+            unset($facets["settlement"]);
+         case "settlement":
+            unset($facets["country"]);
+         default:
+            break;
+        }
+        
+        $params[$field] = $value;
+        
+        // have removed facet/s
+        $removed = true;
+    }
+    
+    return $removed;
 }
 //}}}
 
@@ -230,21 +230,21 @@ function removeFacets(&$params, $dateFormat, $gap) { //{{{
  ******
  */
 function addFacets() { //{{{
-		global $facets, $solr;
-		
-		foreach ($facets as $f => $field) {
-				foreach (explode(" ", $field) as $ff) {
-						switch ($f) {
-						 case "date":
-						 case "copying_date":
-								$solr->addDateFacet($ff);
-								break;
-						 default:
-								$solr->addFacet($ff);
-								break;
-						}
-				}
-		}
+    global $facets, $solr;
+    
+    foreach ($facets as $f => $field) {
+        foreach (explode(" ", $field) as $ff) {
+            switch ($f) {
+             case "date":
+             case "copying_date":
+                $solr->addDateFacet($ff);
+                break;
+             default:
+                $solr->addFacet($ff);
+                break;
+            }
+        }
+    }
 }
 //}}}
 
@@ -260,38 +260,38 @@ function addFacets() { //{{{
  ******
  */
 function checkQuery(&$params) { //{{{
-		global $noQuoteFields;
-		
-		do {
-				$qs = isset($_REQUEST["q"]) ? (array) $_REQUEST["q"] : array("*");
-				$fields = isset($_REQUEST["field"]) ? (array) $_REQUEST["field"] : array("text");
-				
-				$c = min(count($qs), count($fields));
-				for ($i = 0; $i < $c; ++ $i) {
-						// if there are other params, then ignore dummy query
-						if ($params && "*" == $qs[$i] && "text" == $fields[$i]) {
-								continue;
-						}
-						
-						// new field
-						if (!isset($params[$fields[$i]])) {
-								$params[$fields[$i]] = array();
-						}
-						
-						// field not to be quoted as string, so parse
-						if (in_array($fields[$i], $noQuoteFields)) {
-								$params[$fields[$i]][] = parseQuery($qs[$i]);
-						}
-						// contains spaces, so quote
-						elseif (false !== strpos($qs[$i], " ")) {
-								$params[$fields[$i]][] = array(sprintf('"%s"', $qs[$i]));
-						}
-						// add as is
-						else {
-								$params[$fields[$i]][] = array($qs[$i]);
-						}
-				}
-		} while (false);
+    global $noQuoteFields;
+    
+    do {
+        $qs = isset($_REQUEST["q"]) ? (array) $_REQUEST["q"] : array("*");
+        $fields = isset($_REQUEST["field"]) ? (array) $_REQUEST["field"] : array("text");
+        
+        $c = min(count($qs), count($fields));
+        for ($i = 0; $i < $c; ++ $i) {
+            // if there are other params, then ignore dummy query
+            if ($params && "*" == $qs[$i] && "text" == $fields[$i]) {
+                continue;
+            }
+            
+            // new field
+            if (!isset($params[$fields[$i]])) {
+                $params[$fields[$i]] = array();
+            }
+            
+            // field not to be quoted as string, so parse
+            if (in_array($fields[$i], $noQuoteFields)) {
+                $params[$fields[$i]][] = parseQuery($qs[$i]);
+            }
+            // contains spaces, so quote
+            elseif (false !== strpos($qs[$i], " ")) {
+                $params[$fields[$i]][] = array(sprintf('"%s"', $qs[$i]));
+            }
+            // add as is
+            else {
+                $params[$fields[$i]][] = array($qs[$i]);
+            }
+        }
+    } while (false);
 }
 //}}}
 
@@ -310,80 +310,80 @@ function checkQuery(&$params) { //{{{
  ******
  */
 function paramsForDesiredDocs($params, $doctype) { //{{{
-		global $facets, $noQuoteFields, $joinFmt, $msID, $workParentID;
-		
-		$localParams = array();
-		$newParams = array();
-		//print_r($params);
-		
-		// conjoin params for this doc type into single param
-		$v = 0;
-		foreach ($params as $field => $value) {
-				$param = formatField($field, $value);
-				
-				$vv = sprintf('v%d', $v ++);
-				
-				switch (true) {
-						// space in field, so split and only use one which matches desired doc type
-				 case (false !== strpos($field, " ")):
-						foreach (explode(" ", $field) as $f) {
-								if (0 === strpos($f, $doctype)) {
-										$newParams[$f] = $param;
-										break;
-								}
-						}
-						break;
+    global $facets, $noQuoteFields, $joinFmt, $msID, $workParentID;
+    
+    $localParams = array();
+    $newParams = array();
+    //print_r($params);
+    
+    // conjoin params for this doc type into single param
+    $v = 0;
+    foreach ($params as $field => $value) {
+        $param = formatField($field, $value);
+        
+        $vv = sprintf('v%d', $v ++);
+        
+        switch (true) {
+            // space in field, so split and only use one which matches desired doc type
+         case (false !== strpos($field, " ")):
+            foreach (explode(" ", $field) as $f) {
+                if (0 === strpos($f, $doctype)) {
+                    $newParams[$f] = $param;
+                    break;
+                }
+            }
+            break;
 
-						// boost some fields and fall through
-				 case ("text" == $field):
-						$param = formatField(array("title" => 20, "work_author_main" => 60, "author" => 40, "text" => 1), 
-																 $value);
-						
-						// some fields which are the same in all doc types
-				 case ("place" == $field):
-				 case ("title" == $field):
-				 case ("author" == $field):
-				 case ("note" == $field):
-				 case ("author_note_place" == $field):
-				 case ("work_note_place" == $field):
-						// search field in desired doc type
-				 case (0 === strpos($field, $doctype)): 
-						$newParams[$field] = $param;
-						break;
-						
-						// searching for ms field in work doc, so join
-				 case ("work" == $doctype):
-						$newParams[$field] = sprintf($joinFmt, $msID, $workParentID, $vv);
-						$localParams[$vv] = $param;
-						break;
-				
-						// searching for work field in ms doc, so join
-				 case ("ms" == $doctype):
-						$newParams[$field] = sprintf($joinFmt, $workParentID, $msID, $vv);
-						$localParams[$vv] = $param;
-						break;
-						
-				 default:
-						break;
-				}
-		}
-		
-		// add type
-		switch ($doctype) {
-		 case "work":
-		 case "ms":
-				$newParams["type"] = sprintf("%s:%s", $facets["type"], $doctype);
-				break;
-				
-		 case "people":
-				$newParams["type"] = sprintf("%s:person", $facets["authtype"]);
-				break;
-		}
+            // boost some fields and fall through
+         case ("text" == $field):
+            $param = formatField(array("title" => 20, "work_author_main" => 60, "author" => 40, "text" => 1), 
+                                 $value);
+            
+            // some fields which are the same in all doc types
+         case ("place" == $field):
+         case ("title" == $field):
+         case ("author" == $field):
+         case ("note" == $field):
+         case ("author_note_place" == $field):
+         case ("work_note_place" == $field):
+            // search field in desired doc type
+         case (0 === strpos($field, $doctype)): 
+            $newParams[$field] = $param;
+            break;
+            
+            // searching for ms field in work doc, so join
+         case ("work" == $doctype):
+            $newParams[$field] = sprintf($joinFmt, $msID, $workParentID, $vv);
+            $localParams[$vv] = $param;
+            break;
+        
+            // searching for work field in ms doc, so join
+         case ("ms" == $doctype):
+            $newParams[$field] = sprintf($joinFmt, $workParentID, $msID, $vv);
+            $localParams[$vv] = $param;
+            break;
+            
+         default:
+            break;
+        }
+    }
+    
+    // add type
+    switch ($doctype) {
+     case "work":
+     case "ms":
+        $newParams["type"] = sprintf("%s:%s", $facets["type"], $doctype);
+        break;
+        
+     case "people":
+        $newParams["type"] = sprintf("%s:person", $facets["authtype"]);
+        break;
+    }
 
-		// conjoin query params
-		$newParams = implode(" AND ", $newParams);
+    // conjoin query params
+    $newParams = implode(" AND ", $newParams);
 
-		return array($localParams, $newParams);
+    return array($localParams, $newParams);
 }
 //}}}
 
@@ -400,119 +400,119 @@ function paramsForDesiredDocs($params, $doctype) { //{{{
  ******
  */
 function paramsForFacets($params, $doctype) { //{{{
-		global $noQuoteFields, $joinFmt, $msID, $workParentID;
-		
-		// generate new list of search params
-		$newParams = array();
-		foreach ($params as $f => $value) {
-				if (!$value) {
-						continue;
-				}
-				
-				// decide on which doc type the field is for
-				$d = "";
-				switch ($f) {
-						// ignore type field here
-				 case "type":
-						break;
-						
-						// search in docs of given type for text/title/author
-				 case "text":
-						$d = $doctype;
-						break;
-						
-						// field is for work doc type
-				 case "title":
-				 case "author":
-				 case "note":
-				 case "author_note_place":
-				 case "work_note_place":
-				 case "place":
-						$d = "work";
-						break;
-						
-						// field is for ms doc type
-				 case "ms_identifier_idno":
-						$d = "ms";
-						break;
-						
-				 default:
-						if (0 === strpos($f, "work")) {
-								$d = "work";
-						}
-						elseif (0 === strpos($f, "ms")) {
-								$d = "ms";
-						}
-						break;
-				}
-				
-				// invalid param
-				if (!$d) {
-						continue;
-				}
-				
-				if (!isset($newParams[$d])) {
-						$newParams[$d] = array();
-				}
-				
-				$newParams[$d][] = formatField($f, $value);
-		}
-		
-		$query = array();
-		$localParams = array();
-		
-		// generate local params for join queries
-		foreach ($newParams as $t => $n) {
-				$localParams[$t] = implode(" AND ", $newParams[$t]);
-		}
-		
-		// generate join queries using local params
-		// if query for other doc type exists, then conjoin this to join query
-		// if query for other doc type doesn't exist, then disjoin query for current doc type
-		foreach ($newParams as $t => $n) {
-				$q = "";
-				switch ($t) {
-				 case "work":
-						// query to get parent MS docs which contain matching work docs
-						$q = sprintf($joinFmt, $workParentID, $msID, $t);
-						
-						// have MS query, so restrict using it
-						if (isset($localParams["ms"])) {
-								$q = sprintf('(%s AND (%s))', $q, $localParams["ms"]);
-						}
-						
-						$query[] = $q;
-						
-						// no MS query, so add disjunct for work query
-						if (!isset($newParams["ms"])) {
-								$query[] = $localParams["work"];
-						}
-						break;
-						
-				 case "ms":
-						$q = sprintf($joinFmt, $msID, $workParentID, $t);
-						if (isset($localParams["work"])) {
-								$q = sprintf('(%s AND (%s))', $q, $localParams["work"]);
-						}
+    global $noQuoteFields, $joinFmt, $msID, $workParentID;
+    
+    // generate new list of search params
+    $newParams = array();
+    foreach ($params as $f => $value) {
+        if (!$value) {
+            continue;
+        }
+        
+        // decide on which doc type the field is for
+        $d = "";
+        switch ($f) {
+            // ignore type field here
+         case "type":
+            break;
+            
+            // search in docs of given type for text/title/author
+         case "text":
+            $d = $doctype;
+            break;
+            
+            // field is for work doc type
+         case "title":
+         case "author":
+         case "note":
+         case "author_note_place":
+         case "work_note_place":
+         case "place":
+            $d = "work";
+            break;
+            
+            // field is for ms doc type
+         case "ms_identifier_idno":
+            $d = "ms";
+            break;
+            
+         default:
+            if (0 === strpos($f, "work")) {
+                $d = "work";
+            }
+            elseif (0 === strpos($f, "ms")) {
+                $d = "ms";
+            }
+            break;
+        }
+        
+        // invalid param
+        if (!$d) {
+            continue;
+        }
+        
+        if (!isset($newParams[$d])) {
+            $newParams[$d] = array();
+        }
+        
+        $newParams[$d][] = formatField($f, $value);
+    }
+    
+    $query = array();
+    $localParams = array();
+    
+    // generate local params for join queries
+    foreach ($newParams as $t => $n) {
+        $localParams[$t] = implode(" AND ", $newParams[$t]);
+    }
+    
+    // generate join queries using local params
+    // if query for other doc type exists, then conjoin this to join query
+    // if query for other doc type doesn't exist, then disjoin query for current doc type
+    foreach ($newParams as $t => $n) {
+        $q = "";
+        switch ($t) {
+         case "work":
+            // query to get parent MS docs which contain matching work docs
+            $q = sprintf($joinFmt, $workParentID, $msID, $t);
+            
+            // have MS query, so restrict using it
+            if (isset($localParams["ms"])) {
+                $q = sprintf('(%s AND (%s))', $q, $localParams["ms"]);
+            }
+            
+            $query[] = $q;
+            
+            // no MS query, so add disjunct for work query
+            if (!isset($newParams["ms"])) {
+                $query[] = $localParams["work"];
+            }
+            break;
+            
+         case "ms":
+            $q = sprintf($joinFmt, $msID, $workParentID, $t);
+            if (isset($localParams["work"])) {
+                $q = sprintf('(%s AND (%s))', $q, $localParams["work"]);
+            }
 
-						$query[] = $q;
+            $query[] = $q;
 
-						if (!isset($newParams["work"])) {
-								$query[] = $localParams["ms"];
-						}
-						
-						break;
-						
-				 default:
-						break;
-				}
-				
-		}
-		
-		// disjoin queries to get results for each doc type
-		$query = sprintf("(%s)", implode(") OR (", $query));
-		
-		return array($localParams, $query);
+            if (!isset($newParams["work"])) {
+                $query[] = $localParams["ms"];
+            }
+            
+            break;
+            
+         default:
+            break;
+        }
+        
+    }
+    
+    // disjoin queries to get results for each doc type
+    $query = sprintf("(%s)", implode(") OR (", $query));
+    
+    return array($localParams, $query);
 }
 //}}}
 
@@ -530,50 +530,50 @@ function paramsForFacets($params, $doctype) { //{{{
  ******
  */
 function paramsForParentChildDocs($dom, $doctype) { //{{{
-		// XPath for getting IDs of documents in response
-		$xpath = "/response/result[@name='response']/doc/str[@name='id']";
-		$parentChildQuery = "-text:*";
-		
-		do {
-				$xp = new DomXPath($dom);
-				$results = $xp->evaluate($xpath);
-				
-				if (!$results || 0 == $results->length) {
-						break;
-				}
-				
-				// create query for these documents and parent/children ones too
-				$ids = array();
-				foreach ($results as $node) {
-						// escape any :s in ID
-						$id = str_replace(":", "\\:", $node->nodeValue);
-						$ids[] = sprintf("id:%s", $id);
-						
-						switch ($doctype) {
-								// get MS record containing work
-						 case "work":
-								$ids[] = sprintf("id:%s", substr($id, 0, strpos($id, ";")));
-								break;
-								
-								// get work records contained in MS
-						 case "ms":
-								$ids[] = sprintf("work_parent_id:%s", $id);
-								break;
-								
-								// person, so just this record
-						 case "people":
-								break;
-								
-						 default:
-								break;
-						}
-				}
+    // XPath for getting IDs of documents in response
+    $xpath = "/response/result[@name='response']/doc/str[@name='id']";
+    $parentChildQuery = "-text:*";
+    
+    do {
+        $xp = new DomXPath($dom);
+        $results = $xp->evaluate($xpath);
+        
+        if (!$results || 0 == $results->length) {
+            break;
+        }
+        
+        // create query for these documents and parent/children ones too
+        $ids = array();
+        foreach ($results as $node) {
+            // escape any :s in ID
+            $id = str_replace(":", "\\:", $node->nodeValue);
+            $ids[] = sprintf("id:%s", $id);
+            
+            switch ($doctype) {
+                // get MS record containing work
+             case "work":
+                $ids[] = sprintf("id:%s", substr($id, 0, strpos($id, ";")));
+                break;
+                
+                // get work records contained in MS
+             case "ms":
+                $ids[] = sprintf("work_parent_id:%s", $id);
+                break;
+                
+                // person, so just this record
+             case "people":
+                break;
+                
+             default:
+                break;
+            }
+        }
 
-				// disjoin params
-				$parentChildQuery = implode(" OR ", $ids);
-		} while (false);
-		
-		return $parentChildQuery;
+        // disjoin params
+        $parentChildQuery = implode(" OR ", $ids);
+    } while (false);
+    
+    return $parentChildQuery;
 }
 //}}}
 
@@ -590,52 +590,52 @@ function paramsForParentChildDocs($dom, $doctype) { //{{{
  ******
  */
 function mergeDoms($bothDom, $facetsDom, $idDom) { //{{{
-		// stats attributes
-		$attrs = array("start", "numFound");
-		
-		// XPath for facets node and results
-		$facetCountXPath = "/response/lst[@name='facet_counts']";
-		$resultsXPath = "/response/result";
+    // stats attributes
+    $attrs = array("start", "numFound");
+    
+    // XPath for facets node and results
+    $facetCountXPath = "/response/lst[@name='facet_counts']";
+    $resultsXPath = "/response/result";
 
-		do {
-				// get result node from idDom
-				$idXP = new DomXPath($idDom);
-				$idResult = $idXP->query($resultsXPath);
-				if (!$idResult || 0 == $idResult->length) {
-						break;
-				}
-				$idResult = $idResult->item(0);
-				
-				// get result node from bothDom
-				$bothXP = new DomXPath($bothDom);
-				$bothResult = $bothXP->query($resultsXPath);
-				if (!$bothResult || 0 == $bothResult->length) {
-						break;
-				}
-				$bothResult = $bothResult->item(0);
-				
-				// copy idDom results into bothDom
-				$idResult = $bothDom->importNode($idResult, true);
-				$bothDom->documentElement->appendChild($idResult);
+    do {
+        // get result node from idDom
+        $idXP = new DomXPath($idDom);
+        $idResult = $idXP->query($resultsXPath);
+        if (!$idResult || 0 == $idResult->length) {
+            break;
+        }
+        $idResult = $idResult->item(0);
+        
+        // get result node from bothDom
+        $bothXP = new DomXPath($bothDom);
+        $bothResult = $bothXP->query($resultsXPath);
+        if (!$bothResult || 0 == $bothResult->length) {
+            break;
+        }
+        $bothResult = $bothResult->item(0);
+        
+        // copy idDom results into bothDom
+        $idResult = $bothDom->importNode($idResult, true);
+        $bothDom->documentElement->appendChild($idResult);
 
-				// finished if there are no facets
-				if (null == $facetsDom) {
-						break;
-				}
+        // finished if there are no facets
+        if (null == $facetsDom) {
+            break;
+        }
 
-				$facetXP = new DomXPath($facetsDom);
-				$facets = $facetXP->query($facetCountXPath);
-				
-				if (!$facets || 0 == $facets->length) {
-						break;
-				}
-				
-				// add to document element in bothDom
-				$facets = $bothDom->importNode($facets->item(0), true);
-				$bothDom->documentElement->appendChild($facets);
-		} while (false);
-		
-		return $bothDom;
+        $facetXP = new DomXPath($facetsDom);
+        $facets = $facetXP->query($facetCountXPath);
+        
+        if (!$facets || 0 == $facets->length) {
+            break;
+        }
+        
+        // add to document element in bothDom
+        $facets = $bothDom->importNode($facets->item(0), true);
+        $bothDom->documentElement->appendChild($facets);
+    } while (false);
+    
+    return $bothDom;
 }
 //}}}
 
@@ -650,13 +650,13 @@ function mergeDoms($bothDom, $facetsDom, $idDom) { //{{{
  ******
  */
 function setSortFields($sortBy, $sortDir) { //{{{
-		global $solr, $sortFields;
-		
-		if (isset($sortFields[$sortBy])) {
-				$solr->setSortFields(array($sortFields[$sortBy] => 
-																	 "asc" == $sortDir ? SolrQuery::ORDER_ASC : 
-																	 SolrQuery::ORDER_DESC));
-		}
+    global $solr, $sortFields;
+    
+    if (isset($sortFields[$sortBy])) {
+        $solr->setSortFields(array($sortFields[$sortBy] => 
+                                   "asc" == $sortDir ? SolrQuery::ORDER_ASC : 
+                                   SolrQuery::ORDER_DESC));
+    }
 }
 //}}}
 
@@ -682,75 +682,75 @@ function setSortFields($sortBy, $sortDir) { //{{{
  ******
  */
 function runQueries($params, $offset, $doctype, $sortBy="relevance", $sortDir="desc") { //{{{
-		global $solr;
-		
-		$bothDom = null;
+    global $solr;
+    
+    $bothDom = null;
 
-		do {
-				// people query uses text field
-				if ("people" == $doctype && isset($params["people"])) {
-						$params["text"] = $params["people"];
-						unset($params["people"]);
-				}
-				
-				// rename classmark
-				if (isset($params["classmark"])) {
-						$params["ms_identifier_idno"] = $params["classmark"];
-						unset($params["classmark"]);
-				}
-				
-				// places search, so do dummy search and finished
-				if (isset($params["places"])) {
-						$bothDom = $solr->rawSearch("-doc_type:*");
-						break;
-				}
-				
-				// set sort field
-				setSortFields($sortBy, $sortDir);
-				
-				// search for documents of desired type
-				list ($localParams, $idQuery) = paramsForDesiredDocs($params, $doctype);
-				
-				// get IDs of documents matched with search for docs of desired type
-				$idDom = $solr->rawSearch($idQuery, $localParams, $offset, array("id", "score"));
-				if (!$idDom) {
-						break;
-				}
-				
-				// not interested in sorting anymore
-				$solr->setSortFields(null);
-				
-				// use IDs to get both desired docs and their parents/children
-				$bothQuery = paramsForParentChildDocs($idDom, $doctype);
-				$solr->newQuery();
-				$solr->setRows(-1); // big number to get all possible docs
-				$bothDom = $solr->rawSearch($bothQuery);
-				
-				if (!$bothDom) {
-						break;
-				}
-				
-				// only need facets for ms/work queries
-				$facetsDom = null;
-				if ("work" == $doctype || "ms" == $doctype) {
-						// create Solr params for getting facets for documents in search
-						list($localParams, $facetsQuery) = paramsForFacets($params, $doctype);
-						$solr->newQuery();
-						$solr->setRows(0); // don't need rows to get facets
-						addFacets(); // ask Solr to return these facets
-						$facetsDom = $solr->rawSearch($facetsQuery, $localParams);
-						
-						if (!$facetsDom) {
-								break;
-						}
-				}
-						
-				// need to inject facets into bothDom
-				// and copy stats from idDom to bothDom
-				$bothDom = mergeDoms($bothDom, $facetsDom, $idDom);
-		} while (false);
-		
-		return $bothDom;
+    do {
+        // people query uses text field
+        if ("people" == $doctype && isset($params["people"])) {
+            $params["text"] = $params["people"];
+            unset($params["people"]);
+        }
+        
+        // rename classmark
+        if (isset($params["classmark"])) {
+            $params["ms_identifier_idno"] = $params["classmark"];
+            unset($params["classmark"]);
+        }
+        
+        // places search, so do dummy search and finished
+        if (isset($params["places"])) {
+            $bothDom = $solr->rawSearch("-doc_type:*");
+            break;
+        }
+        
+        // set sort field
+        setSortFields($sortBy, $sortDir);
+        
+        // search for documents of desired type
+        list ($localParams, $idQuery) = paramsForDesiredDocs($params, $doctype);
+        
+        // get IDs of documents matched with search for docs of desired type
+        $idDom = $solr->rawSearch($idQuery, $localParams, $offset, array("id", "score"));
+        if (!$idDom) {
+            break;
+        }
+        
+        // not interested in sorting anymore
+        $solr->setSortFields(null);
+        
+        // use IDs to get both desired docs and their parents/children
+        $bothQuery = paramsForParentChildDocs($idDom, $doctype);
+        $solr->newQuery();
+        $solr->setRows(-1); // big number to get all possible docs
+        $bothDom = $solr->rawSearch($bothQuery);
+        
+        if (!$bothDom) {
+            break;
+        }
+        
+        // only need facets for ms/work queries
+        $facetsDom = null;
+        if ("work" == $doctype || "ms" == $doctype) {
+            // create Solr params for getting facets for documents in search
+            list($localParams, $facetsQuery) = paramsForFacets($params, $doctype);
+            $solr->newQuery();
+            $solr->setRows(0); // don't need rows to get facets
+            addFacets(); // ask Solr to return these facets
+            $facetsDom = $solr->rawSearch($facetsQuery, $localParams);
+            
+            if (!$facetsDom) {
+                break;
+            }
+        }
+            
+        // need to inject facets into bothDom
+        // and copy stats from idDom to bothDom
+        $bothDom = mergeDoms($bothDom, $facetsDom, $idDom);
+    } while (false);
+    
+    return $bothDom;
 }
 //}}}
 
@@ -767,35 +767,35 @@ function runQueries($params, $offset, $doctype, $sortBy="relevance", $sortDir="d
  ******
  */
 function xsltParams($haveFacets, $doctype) { //{{{
-		global $solr;
-		
-		$xsltParams = array();
+    global $solr;
+    
+    $xsltParams = array();
 
-		// tell XSLT if there was query and if any facets got search on
-		$xsltParams["haveQuery"] = isset($_REQUEST["q"]) && "" != $_REQUEST["q"];
-		$xsltParams["haveFacets"] = $haveFacets;
+    // tell XSLT if there was query and if any facets got search on
+    $xsltParams["haveQuery"] = isset($_REQUEST["q"]) && "" != $_REQUEST["q"];
+    $xsltParams["haveFacets"] = $haveFacets;
 
-		// copy form data to XSLT
-		foreach ($_REQUEST as $name => $value) {
-				if ($value) {
-						$xsltParams[$name] = is_array($value) ? 
-							implode("|", $value) : $value;
-				}
-		}
-		
-		// add doctype
-		$xsltParams["doctype"] = $doctype;
-		
-		// script and query string (remove [] from fields)
-		$xsltParams["php_script"] = $_SERVER["SCRIPT_NAME"];
-		$xsltParams["query_string"] = http_build_query($_REQUEST); /*preg_replace('/%5B[0-9]+%5D/simU', '', 
-																							 http_build_query($_REQUEST));*/
-		
-		// Solr params
-		$xsltParams["rows"] = $solr->getRows();
-		$xsltParams["gap"] = $solr->getGap();
-		
-		return $xsltParams;
+    // copy form data to XSLT
+    foreach ($_REQUEST as $name => $value) {
+        if ($value) {
+            $xsltParams[$name] = is_array($value) ? 
+              implode("|", $value) : $value;
+        }
+    }
+    
+    // add doctype
+    $xsltParams["doctype"] = $doctype;
+    
+    // script and query string (remove [] from fields)
+    $xsltParams["php_script"] = $_SERVER["SCRIPT_NAME"];
+    $xsltParams["query_string"] = http_build_query($_REQUEST); /*preg_replace('/%5B[0-9]+%5D/simU', '', 
+                                               http_build_query($_REQUEST));*/
+    
+    // Solr params
+    $xsltParams["rows"] = $solr->getRows();
+    $xsltParams["gap"] = $solr->getGap();
+    
+    return $xsltParams;
 }
 //}}}
 
@@ -809,16 +809,16 @@ function xsltParams($haveFacets, $doctype) { //{{{
  ******
  */
 function offset() { //{{{
-		return isset($_REQUEST["offset"]) && (int) $_REQUEST["offset"] ?
-			(int) $_REQUEST["offset"] : 0;
+    return isset($_REQUEST["offset"]) && (int) $_REQUEST["offset"] ?
+      (int) $_REQUEST["offset"] : 0;
 }
 //}}}
 
 function saveSearchURI() { //{{{
-		session_start();
-		$_SESSION["search"] = sprintf("%s?%s",
-																	$_SERVER["SCRIPT_NAME"],
-																	http_build_query($_REQUEST));
+    session_start();
+    $_SESSION["search"] = sprintf("%s?%s",
+                                  $_SERVER["SCRIPT_NAME"],
+                                  http_build_query($_REQUEST));
 }
 //}}}
 
@@ -839,43 +839,43 @@ function saveSearchURI() { //{{{
  ******
  */
 function utf8_to_unicode($str) { //{{{
-		$hl = array(); // foldable words to highlight
-		$hlu = array(); // unfoldable words to highlight
-		
-		$fromEnc = "UTF-8";
-		$toEnc = "UCS-4BE";
-		
-		foreach (explode(" ", $str) as $w) {
-				if (!$w || "*" == $w) {
-						continue;
-				}
-				
-				// non-Arabic words can just be added as is
-				if (!preg_match("/\p{Arabic}/u", $w)) {
-						$hl[] = $w;
-						continue;
-				}
-				
-				$word = "";
-				$w = mb_convert_encoding($w, $toEnc, $fromEnc);
-				$l = mb_strlen($w, $toEnc);
-				
-				// Visit each unicode character
-				for($i = 0; $i < $l; ++ $i) {
-						// Now we have 4 bytes. Find their total
-						// numeric value.
-						$s2 = mb_substr($w, $i, 1, $toEnc);
-						$val = unpack("N", $s2);
-						$word .= sprintf("\\u%04X", $val[1]);
-				}
-				
-				$hlu[] = $word;
-		}
-		
-		// join words with |
-		return sprintf("hlu=%s&hl=%s", 
-									 implode("|", $hlu), 
-									 implode("|", $hl));
+    $hl = array(); // foldable words to highlight
+    $hlu = array(); // unfoldable words to highlight
+    
+    $fromEnc = "UTF-8";
+    $toEnc = "UCS-4BE";
+    
+    foreach (explode(" ", $str) as $w) {
+        if (!$w || "*" == $w) {
+            continue;
+        }
+        
+        // non-Arabic words can just be added as is
+        if (!preg_match("/\p{Arabic}/u", $w)) {
+            $hl[] = $w;
+            continue;
+        }
+        
+        $word = "";
+        $w = mb_convert_encoding($w, $toEnc, $fromEnc);
+        $l = mb_strlen($w, $toEnc);
+        
+        // Visit each unicode character
+        for($i = 0; $i < $l; ++ $i) {
+            // Now we have 4 bytes. Find their total
+            // numeric value.
+            $s2 = mb_substr($w, $i, 1, $toEnc);
+            $val = unpack("N", $s2);
+            $word .= sprintf("\\u%04X", $val[1]);
+        }
+        
+        $hlu[] = $word;
+    }
+    
+    // join words with |
+    return sprintf("hlu=%s&hl=%s", 
+                   implode("|", $hlu), 
+                   implode("|", $hl));
 }
 //}}}
 
@@ -894,29 +894,29 @@ function utf8_to_unicode($str) { //{{{
  ******
  */
 function parseQuery($query) { //{{{
-		// quotes
-		$quotationMarks = '"\'';
-		$terms = array();
-		
-		for ($q = strtok($query, ' '); $q !== false; $q = strtok(' ')) {
-				// token doesn't start with quote
-				if (false === strpos($quotationMarks, $q[0])) {
-						$terms[] = $q;
-						continue;
-				}
-				
-				// token ends with quote
-				if (false !== strpos($quotationMarks, $q[strlen($q)-1])) {
-						$terms[] = sprintf('"%s"', substr($q, 1, -1));
-						continue;
-				}
-				
-				// token doesn't end with quote
-				// so grab everything up to closing quote from query
-				$terms[] = sprintf('"%s %s"', substr($q, 1), strtok($q[0]));
-		}
-		
-		return $terms;
+    // quotes
+    $quotationMarks = '"\'';
+    $terms = array();
+    
+    for ($q = strtok($query, ' '); $q !== false; $q = strtok(' ')) {
+        // token doesn't start with quote
+        if (false === strpos($quotationMarks, $q[0])) {
+            $terms[] = $q;
+            continue;
+        }
+        
+        // token ends with quote
+        if (false !== strpos($quotationMarks, $q[strlen($q)-1])) {
+            $terms[] = sprintf('"%s"', substr($q, 1, -1));
+            continue;
+        }
+        
+        // token doesn't end with quote
+        // so grab everything up to closing quote from query
+        $terms[] = sprintf('"%s %s"', substr($q, 1), strtok($q[0]));
+    }
+    
+    return $terms;
 }
 //}}}
 
@@ -938,66 +938,66 @@ function parseQuery($query) { //{{{
  ******
  */
 function paging_list($total, $offset, $rows, $php_script, $query_string) { //{{{
-		// number of hits either side of current position
-		$spread = 3 * $rows;
-		$dots = "...";
-		
-		$dom = new DomDocument();
-		$ul = $dom->createElement("ul");
-		$ul->setAttribute("id", "paging");
-		$ul = $dom->appendChild($ul);
-		
-		for ($i = 0; $i < $total; $i += $rows) {
-				// difference between current position and start of search
-				$diff = $i - $offset;
-				
-				// only want cases where current is first/last/within spread
-				if (0 != $i && 
-						($i + $rows) < $total && 
-						($diff > $spread || $diff < 0 - $spread)) {
-						continue;
-				}
-				
-				// label for link
-				$label = "";
-				
-				switch (true) {
-				 case (0 == $i):
-						$label = "First";
-						break;
-						
-				 case ($i + $rows >= $total):
-						$label = "Last";
-						break;
-						
-				 case ($diff == $spread || $diff == 0 - $spread):
-						$label = $dots;
-						break;
-						
-				 default:
-						$label = ($i / $rows) + 1;
-						break;
-				}
-				
-				$li = null;
-				
-				// plain text for current page or dots
-				if ($i == $offset || $dots == $label) {
-						$li = $dom->createElement("li", $label);
-				}
-				// link for first/last or numbered page
-				else {
-						$li = $dom->createElement("li");
-						$a = $dom->createElement("a", $label);
-						$a->setAttribute("href", sprintf("%s?%s&offset=%d",
-																						 $php_script, $query_string, $i));
-						$li->appendChild($a);
-				}
-				
-				$ul->appendChild($li);
-		}
-		
-		return $dom->documentElement;
+    // number of hits either side of current position
+    $spread = 3 * $rows;
+    $dots = "...";
+    
+    $dom = new DomDocument();
+    $ul = $dom->createElement("ul");
+    $ul->setAttribute("id", "paging");
+    $ul = $dom->appendChild($ul);
+    
+    for ($i = 0; $i < $total; $i += $rows) {
+        // difference between current position and start of search
+        $diff = $i - $offset;
+        
+        // only want cases where current is first/last/within spread
+        if (0 != $i && 
+            ($i + $rows) < $total && 
+            ($diff > $spread || $diff < 0 - $spread)) {
+            continue;
+        }
+        
+        // label for link
+        $label = "";
+        
+        switch (true) {
+         case (0 == $i):
+            $label = "First";
+            break;
+            
+         case ($i + $rows >= $total):
+            $label = "Last";
+            break;
+            
+         case ($diff == $spread || $diff == 0 - $spread):
+            $label = $dots;
+            break;
+            
+         default:
+            $label = ($i / $rows) + 1;
+            break;
+        }
+        
+        $li = null;
+        
+        // plain text for current page or dots
+        if ($i == $offset || $dots == $label) {
+            $li = $dom->createElement("li", $label);
+        }
+        // link for first/last or numbered page
+        else {
+            $li = $dom->createElement("li");
+            $a = $dom->createElement("a", $label);
+            $a->setAttribute("href", sprintf("%s?%s&offset=%d",
+                                             $php_script, $query_string, $i));
+            $li->appendChild($a);
+        }
+        
+        $ul->appendChild($li);
+    }
+    
+    return $dom->documentElement;
 }
 //}}}
 

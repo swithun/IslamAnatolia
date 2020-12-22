@@ -40,7 +40,7 @@ do {
 
     // remove offset from _GET
     if (isset($_GET["offset"])) {
-				unset($_GET["offset"]);
+        unset($_GET["offset"]);
     }
 
     // params
@@ -48,55 +48,55 @@ do {
     $params["offset"] = $offset;
     $params["limit"] = $limit;
     $params["url"] = sprintf("%s?%s",
-														 $_SERVER["PHP_SELF"],
-														 http_build_query($_GET));
+                             $_SERVER["PHP_SELF"],
+                             http_build_query($_GET));
     $params["search_type"] = "list";
 
     $solr = new Solr();
 
-		// work out which facets to use
-		$physical_location_fields = array("country", "settlement", "institution", "repository", "collection");
-		foreach ($physical_location_fields as $field) {
-				$f = "physical_location_" . $field;
-				
-				// not yet facetting on this field
-				if (!isset($_REQUEST[$f])) {
-						// so add facet for this field
-						$solr->addFacet($f);
-						// for country/settlement fields, only going to add this one facet
-						if ("country" == $field || "settlement" == $field) {
-								break;
-						}
-				}
-				// already faceting on this field
-				else {
-						$params[$f] = $_REQUEST[$f];
-						$searchParams[$f] = $_REQUEST[$f];
-				}
+    // work out which facets to use
+    $physical_location_fields = array("country", "settlement", "institution", "repository", "collection");
+    foreach ($physical_location_fields as $field) {
+        $f = "physical_location_" . $field;
+        
+        // not yet facetting on this field
+        if (!isset($_REQUEST[$f])) {
+            // so add facet for this field
+            $solr->addFacet($f);
+            // for country/settlement fields, only going to add this one facet
+            if ("country" == $field || "settlement" == $field) {
+                break;
+            }
+        }
+        // already faceting on this field
+        else {
+            $params[$f] = $_REQUEST[$f];
+            $searchParams[$f] = $_REQUEST[$f];
+        }
 
-				/*if ("country" == $field || "settlement" == $field) {
-						if (!isset($_REQUEST[$f])) {
-								$solr->addFacet($f);
-								break;
-						}
-						$params[$f] = $_REQUEST[$f];
-						$searchParams[$f] = $_REQUEST[$f];
-				}
-				else {
-						if (!isset($_REQUEST[$f])) {
-								$solr->addFacet($f);
-						}
-						else {
-								$params[$f] = $_REQUEST[$f];
-								$searchParams[$f] = $_REQUEST[$f];
-						}
-				}*/
-		}
+        /*if ("country" == $field || "settlement" == $field) {
+            if (!isset($_REQUEST[$f])) {
+                $solr->addFacet($f);
+                break;
+            }
+            $params[$f] = $_REQUEST[$f];
+            $searchParams[$f] = $_REQUEST[$f];
+        }
+        else {
+            if (!isset($_REQUEST[$f])) {
+                $solr->addFacet($f);
+            }
+            else {
+                $params[$f] = $_REQUEST[$f];
+                $searchParams[$f] = $_REQUEST[$f];
+            }
+        }*/
+    }
 
-		$searchParams["type_of_resource"] = $type;
-		$dom = $solr->simpleSearch($searchParams, $offset);
+    $searchParams["type_of_resource"] = $type;
+    $dom = $solr->simpleSearch($searchParams, $offset);
 
-		//$dom = $solr->getDocumentsByType($type, $offset);
+    //$dom = $solr->getDocumentsByType($type, $offset);
     $page->setDom($dom);
 } while (false);
 

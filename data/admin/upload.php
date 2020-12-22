@@ -34,25 +34,25 @@ $message = "";
 // have file upload, so proceed
 $success = false;
 if (isset($_FILES[$fileItem])) {
-		$success = handleUpload($_FILES[$fileItem], $message);
+    $success = handleUpload($_FILES[$fileItem], $message);
 }
 
 $params = array("message" => $message,
-								"messageClass" => $success ? "success" : "error");
+                "messageClass" => $success ? "success" : "error");
 
 // had success, so redirect to admin page with message
 if ($success) {
-		$query = http_build_query($params);
-		header("Location: index.php?" . $query);
-		exit;
+    $query = http_build_query($params);
+    header("Location: index.php?" . $query);
+    exit;
 }
 else {
-		// display form for upload
-		$page = new Page($xsltFile);
-		$params["file_item"] = $fileItem;
-		$page->setParams($params);
-		
-		print $page;
+    // display form for upload
+    $page = new Page($xsltFile);
+    $params["file_item"] = $fileItem;
+    $page->setParams($params);
+    
+    print $page;
 }
 
 ?>

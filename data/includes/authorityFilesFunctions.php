@@ -27,31 +27,31 @@
 function myCurl($url) { //{{{
     $data = "";
     $options = array(CURLOPT_URL => $url,
-										 CURLOPT_RETURNTRANSFER => true,
-										 CURLOPT_TIMEOUT => 5);
+                     CURLOPT_RETURNTRANSFER => true,
+                     CURLOPT_TIMEOUT => 5);
 
     do {
-				if (!$url) {
-						break;
-				}
+        if (!$url) {
+            break;
+        }
 
-				$c = curl_init();
-				if (!$c) {
-						break;
-				}
+        $c = curl_init();
+        if (!$c) {
+            break;
+        }
 
-				if (!curl_setopt_array($c, $options)) {
-						break;
-				}
+        if (!curl_setopt_array($c, $options)) {
+            break;
+        }
 
-				$data = curl_exec($c);
-				$code = (int) curl_getinfo($c, CURLINFO_HTTP_CODE);
-				
-				// discard responses which aren't successful (2xx)
-				if ($code < 200 || $code >= 300) {
-						$data = "";
-				}
-				curl_close($c);
+        $data = curl_exec($c);
+        $code = (int) curl_getinfo($c, CURLINFO_HTTP_CODE);
+        
+        // discard responses which aren't successful (2xx)
+        if ($code < 200 || $code >= 300) {
+            $data = "";
+        }
+        curl_close($c);
     } while (false);
 
     return $data;
@@ -84,61 +84,61 @@ function authorityFiles($urns) { //{{{
     // get list of URNs from space delimited list
     $urns = explode(" ", trim($urns));
     foreach ($urns as $urn) {
-				if ("" == $urn) {
-						continue;
-				}
-				
-				// look up URN in database
-				$db->getLatestVersionByName(bin2hex($urn),
-																		AUTHORITY_TYPE);
-				$results = $db->getResults();
+        if ("" == $urn) {
+            continue;
+        }
+        
+        // look up URN in database
+        $db->getLatestVersionByName(bin2hex($urn),
+                                    AUTHORITY_TYPE);
+        $results = $db->getResults();
 
-				// DOM for loading XML authority file into
-				$dom = null;
+        // DOM for loading XML authority file into
+        $dom = null;
 
-				// have local file
-				if ($results) {
-						// load local file into DOM
-						$dom = getDom($results[0]["versionPath"],
-													$results[0]["versionUUID"]);
+        // have local file
+        if ($results) {
+            // load local file into DOM
+            $dom = getDom($results[0]["versionPath"],
+                          $results[0]["versionUUID"]);
 
-						if (!$dom) {
-								continue;
-						}
-						//printf("found local copy of %s\n", $urn);
-				}
-				else {
-						//printf("looking for %s\n", $urn);
-						continue; // don't bother trying to fetch files just now
-						// fetch XML by transforming urn to URL
-						$url = urn2url($urn);
-						if (!$url) {
-								continue;
-						}
-						
-						$xml = myCurl($url);
-						if (!$xml) {
-								continue;
-						}
-						
-						// put XML into DOM, process it and save it
-						$dom = new DomDocument();
-						if (!$dom->loadXml($xml)) {
-								continue;
-						}
+            if (!$dom) {
+                continue;
+            }
+            //printf("found local copy of %s\n", $urn);
+        }
+        else {
+            //printf("looking for %s\n", $urn);
+            continue; // don't bother trying to fetch files just now
+            // fetch XML by transforming urn to URL
+            $url = urn2url($urn);
+            if (!$url) {
+                continue;
+            }
+            
+            $xml = myCurl($url);
+            if (!$xml) {
+                continue;
+            }
+            
+            // put XML into DOM, process it and save it
+            $dom = new DomDocument();
+            if (!$dom->loadXml($xml)) {
+                continue;
+            }
 
-						// put into system - Solr, file system and database
-						$message = "";
-						if (!newAuthorityFile($dom, $message)) {
-								continue;
-						}
-						//printf("downloaded copy of %s\n", $urn);
-				}
-				
-				// add to root
-				$importedRoot = $returnDOM->importNode($dom->documentElement,
-																							 true);
-				$root->appendChild($importedRoot);
+            // put into system - Solr, file system and database
+            $message = "";
+            if (!newAuthorityFile($dom, $message)) {
+                continue;
+            }
+            //printf("downloaded copy of %s\n", $urn);
+        }
+        
+        // add to root
+        $importedRoot = $returnDOM->importNode($dom->documentElement,
+                                               true);
+        $root->appendChild($importedRoot);
     }
 
     return $root;
@@ -165,61 +165,61 @@ function newAuthorityFile($madsDom, &$message, $index=false) { //{{{
     $mods2solrFileName = XSLT_DIR . "mods2solr.xsl";
 
     do {
-				// transform MADS to MODS and then to Solr
-				$mads2modsXSLT = new XSLT($mads2modsFileName);
-				$mads2modsXSLT->addParams(array("mads" => "true"));
-				$modsDoc = $mads2modsXSLT->transformToDom($madsDom);
-				$mods2solrXSLT = new XSLT($mods2solrFileName);
-				$mods2solrXSLT->addParams(array("docType" => "authority"));
-				$solrDoc = $mods2solrXSLT->transformToDom($modsDoc);
+        // transform MADS to MODS and then to Solr
+        $mads2modsXSLT = new XSLT($mads2modsFileName);
+        $mads2modsXSLT->addParams(array("mads" => "true"));
+        $modsDoc = $mads2modsXSLT->transformToDom($madsDom);
+        $mods2solrXSLT = new XSLT($mods2solrFileName);
+        $mods2solrXSLT->addParams(array("docType" => "authority"));
+        $solrDoc = $mods2solrXSLT->transformToDom($modsDoc);
 
-				// send to Solr and get IDs of documents
-				$solr = Solr::getInstance();
-				if (!$solr) {
-						$message = "Solr connection failed";
-						break;
-				}
-				
-				$db = null;
-				if (!$index) {
-						$db = DB::getInstance();
-						if (!$db) {
-								$message = "DB connection failed";
-								break;
-						}
-				}
-				
-				$authID = $solr->addDocument($solrDoc, $message);
-				if (!$authID) {
-						$message = "Problem indexing authority file";
-						break;
-				}
-				
-				// just indexing, so finish
-				if ($index) {
-						$success = true;
-						break;
-				}
+        // send to Solr and get IDs of documents
+        $solr = Solr::getInstance();
+        if (!$solr) {
+            $message = "Solr connection failed";
+            break;
+        }
+        
+        $db = null;
+        if (!$index) {
+            $db = DB::getInstance();
+            if (!$db) {
+                $message = "DB connection failed";
+                break;
+            }
+        }
+        
+        $authID = $solr->addDocument($solrDoc, $message);
+        if (!$authID) {
+            $message = "Problem indexing authority file";
+            break;
+        }
+        
+        // just indexing, so finish
+        if ($index) {
+            $success = true;
+            break;
+        }
 
-				// get file name for authority file
-				list ($path, $newName) = uniqueFileName();
-				if (!$newName) {
-						$message = "Problem generating file name for authority file";
-						break;
-				}
+        // get file name for authority file
+        list ($path, $newName) = uniqueFileName();
+        if (!$newName) {
+            $message = "Problem generating file name for authority file";
+            break;
+        }
 
-				// save to file system
-				$returnPath = getFilename($path, $newName);
-				if (false === $madsDom->save($returnPath)) {
-						$message = "Problem saving authority file";
-						break;
-				}
+        // save to file system
+        $returnPath = getFilename($path, $newName);
+        if (false === $madsDom->save($returnPath)) {
+            $message = "Problem saving authority file";
+            break;
+        }
 
-				// record it in database
-				$db->addDocument($authID, AUTHORITY_TYPE,
-												 $newName, $path, getUser());
+        // record it in database
+        $db->addDocument($authID, AUTHORITY_TYPE,
+                         $newName, $path, getUser());
 
-				$success = true;
+        $success = true;
     } while (false);
 
     return $success;
@@ -239,29 +239,29 @@ function newAuthorityFile($madsDom, &$message, $index=false) { //{{{
  */
 function urn2url($urn) { //{{{
     $url = "";
-		
-		do {
-				// split urn into prefix and ID
-				$fields = explode(":", $urn, 2);
-				
-				if (2 > count($fields)) {
-						break;
-				}
-				
-				switch ($fields[0]) {
-						// Library of Congress
-				 case "lccn":
-						$url = sprintf(LCCN_URL_FORMAT,
-													 $fields[1]);
-						break;
-						// local identifier - should have been added already
-				 case "local":
-						$url = "";
-						break;
-				 default:
-						break;
-				}
-		} while (false);
+    
+    do {
+        // split urn into prefix and ID
+        $fields = explode(":", $urn, 2);
+        
+        if (2 > count($fields)) {
+            break;
+        }
+        
+        switch ($fields[0]) {
+            // Library of Congress
+         case "lccn":
+            $url = sprintf(LCCN_URL_FORMAT,
+                           $fields[1]);
+            break;
+            // local identifier - should have been added already
+         case "local":
+            $url = "";
+            break;
+         default:
+            break;
+        }
+    } while (false);
 
     return $url;
 }
@@ -283,28 +283,28 @@ function getURNFromAuthorityFile($fileName) { //{{{
     $urn = "";
 
     do {
-				// load authority file into DOM
-				$dom = DomDocument::load($fileName);
-				if (!$dom) {
-						break;
-				}
+        // load authority file into DOM
+        $dom = DomDocument::load($fileName);
+        if (!$dom) {
+            break;
+        }
 
-				// get mads:identifier
-				$ids = $dom->getElementsByTagNameNS("http://www.loc.gov/mads/v2",
-																						"identifier");
-				if (!$ids || 0 == $ids->length) {
-						break;
-				}
+        // get mads:identifier
+        $ids = $dom->getElementsByTagNameNS("http://www.loc.gov/mads/v2",
+                                            "identifier");
+        if (!$ids || 0 == $ids->length) {
+            break;
+        }
 
-				// mads:identifier must have @type attribute
-				$node = $ids->item(0);
-				if (!$node->hasAttribute("type")) {
-						break;
-				}
+        // mads:identifier must have @type attribute
+        $node = $ids->item(0);
+        if (!$node->hasAttribute("type")) {
+            break;
+        }
 
-				$urn = sprintf("%s:%s",
-											 $node->getAttribute("type"),
-											 $node->nodeValue);
+        $urn = sprintf("%s:%s",
+                       $node->getAttribute("type"),
+                       $node->nodeValue);
     } while (false);
 
     return $urn;
@@ -343,29 +343,29 @@ function uploadAuthorityFile(&$message, $madsDom, $index=false) { //{{{
  ******
  */
 function getReferers($name, &$dom, &$message) { //{{{
-		$success = false;
-		
-		do {
-				$solr = Solr::getInstance();
-				if (!$refDom = $solr->referers($name)) {
-						$message = "Couldn't query Solr for refering documents";
-						break;
-				}
-				
-				if (!$refDom = $dom->importNode($refDom->documentElement, true)) {
-						$message = "Couldn't import Solr results";
-						break;
-				}
-				
-				if (!$dom->documentElement->appendChild($refDom)) {
-						$message = "Couldn't append Solr results";
-						break;
-				}
-				
-				$success = true;
-		} while (false);
-		
-		return $success;
+    $success = false;
+    
+    do {
+        $solr = Solr::getInstance();
+        if (!$refDom = $solr->referers($name)) {
+            $message = "Couldn't query Solr for refering documents";
+            break;
+        }
+        
+        if (!$refDom = $dom->importNode($refDom->documentElement, true)) {
+            $message = "Couldn't import Solr results";
+            break;
+        }
+        
+        if (!$dom->documentElement->appendChild($refDom)) {
+            $message = "Couldn't append Solr results";
+            break;
+        }
+        
+        $success = true;
+    } while (false);
+    
+    return $success;
 }
 //}}}
 

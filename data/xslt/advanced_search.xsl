@@ -42,47 +42,47 @@
     <h2>Advanced search</h2>
     <form action="advanced_search.php" method="get">
       <p>
-	<label for="query_ms">Search manuscripts</label>
-	<input type="text" name="query_ms" id="query_ms" value="{$query_ms}" class="keyboardInput"/>
+  <label for="query_ms">Search manuscripts</label>
+  <input type="text" name="query_ms" id="query_ms" value="{$query_ms}" class="keyboardInput"/>
       </p>
       <p>
-	<label for="query_author">Search author authority files</label>
-	<input type="text" name="query_author" id="query_author" value="{$query_author}" class="keyboardInput"/>
+  <label for="query_author">Search author authority files</label>
+  <input type="text" name="query_author" id="query_author" value="{$query_author}" class="keyboardInput"/>
       </p>
       <p>
-	<label for="query_authority">Search other authority files</label>
-	<input type="text" name="query_authority" id="query_authority" value="{$query_authority}" class="keyboardInput"/>
+  <label for="query_authority">Search other authority files</label>
+  <input type="text" name="query_authority" id="query_authority" value="{$query_authority}" class="keyboardInput"/>
       </p>
       <p>
-	<label for="query_bib">Search bibliographic items</label>
-	<input type="text" name="query_bib" id="query_bib" value="{$query_bib}" class="keyboardInput"/>
+  <label for="query_bib">Search bibliographic items</label>
+  <input type="text" name="query_bib" id="query_bib" value="{$query_bib}" class="keyboardInput"/>
       </p>
       <p>
-	<label for="return_type">Return documents of this type</label>
-	<select id="return_type" name="return_type">
-	  <option value="1">
-	    <xsl:if test="$return_type = 1">
-	      <xsl:attribute name="selected">selected</xsl:attribute>
-	    </xsl:if>
-	    <xsl:text>Manuscripts</xsl:text>
-	  </option>
-	  <option value="2">
-	    <xsl:if test="$return_type = 2">
-	      <xsl:attribute name="selected">selected</xsl:attribute>
-	    </xsl:if>
-	    <xsl:text>Authority files</xsl:text>
-	  </option>
-	  <option value="3">
-	    <xsl:if test="$return_type = 3">
-	      <xsl:attribute name="selected">selected</xsl:attribute>
-	    </xsl:if>
-	    <xsl:text>Bibliographic items</xsl:text>
-	  </option>
-	</select>
+  <label for="return_type">Return documents of this type</label>
+  <select id="return_type" name="return_type">
+    <option value="1">
+      <xsl:if test="$return_type = 1">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Manuscripts</xsl:text>
+    </option>
+    <option value="2">
+      <xsl:if test="$return_type = 2">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Authority files</xsl:text>
+    </option>
+    <option value="3">
+      <xsl:if test="$return_type = 3">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Bibliographic items</xsl:text>
+    </option>
+  </select>
       </p>
       <p>
-	<input type="hidden" name="submit" value="submit"/>
-	<input type="submit" value="Search"/>
+  <input type="hidden" name="submit" value="submit"/>
+  <input type="submit" value="Search"/>
       </p>
     </form>
   </xsl:template>

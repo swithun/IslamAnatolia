@@ -20,44 +20,44 @@
  ****-->
   
   <xsl:param name="type"/>
-	<xsl:param name="url"/>
+  <xsl:param name="url"/>
   
   <xsl:include href="search.xsl"/>
 
-	<!-- override template in search.xsl -->
-	<xsl:template match="lst[@name='highlighting']">
-		<form action="basket.php" method="post">
-			<dl class="hit_list">
-				<xsl:apply-templates mode="hits"/>
-			</dl>
-			<p>
-				<input type="hidden" name="url" value="{$url}"/>
-				<input type="hidden" name="action" value="add"/>
-				<input type="submit" value="Add selected to basket"/>
-				<input type="reset" value="Clear selection"/>
-			</p>
-		</form>
-	</xsl:template>
-	
-	<xsl:template match="lst" mode="hits">
-		<xsl:apply-templates select="/response/result[@name='response']/doc[str[@name='id']=current()/@name]"/>
-		<dd>
-			<ul class="version_list">
-				<li>
-					<a href="view_version.php?documentName={@name}&amp;version=latest&amp;type={$type}">View latest version</a>
-				</li>
-				<li>
-					<a href="view_version.php?documentName={@name}&amp;version=first&amp;type={$type}">View first version</a>
-				</li>
-				<li>
-					<a href="view_version.php?documentName={@name}&amp;version=all&amp;type={$type}">View all versions</a>
-				</li>
-				<li>
-					<input type="checkbox" name="hits[]" value="{@name}" id="hit_{@name}"/>
-					<label for="hit_{@name}">Add to basket</label>
-				</li>
-			</ul>
-		</dd>
-	</xsl:template>
+  <!-- override template in search.xsl -->
+  <xsl:template match="lst[@name='highlighting']">
+    <form action="basket.php" method="post">
+      <dl class="hit_list">
+        <xsl:apply-templates mode="hits"/>
+      </dl>
+      <p>
+        <input type="hidden" name="url" value="{$url}"/>
+        <input type="hidden" name="action" value="add"/>
+        <input type="submit" value="Add selected to basket"/>
+        <input type="reset" value="Clear selection"/>
+      </p>
+    </form>
+  </xsl:template>
+  
+  <xsl:template match="lst" mode="hits">
+    <xsl:apply-templates select="/response/result[@name='response']/doc[str[@name='id']=current()/@name]"/>
+    <dd>
+      <ul class="version_list">
+        <li>
+          <a href="view_version.php?documentName={@name}&amp;version=latest&amp;type={$type}">View latest version</a>
+        </li>
+        <li>
+          <a href="view_version.php?documentName={@name}&amp;version=first&amp;type={$type}">View first version</a>
+        </li>
+        <li>
+          <a href="view_version.php?documentName={@name}&amp;version=all&amp;type={$type}">View all versions</a>
+        </li>
+        <li>
+          <input type="checkbox" name="hits[]" value="{@name}" id="hit_{@name}"/>
+          <label for="hit_{@name}">Add to basket</label>
+        </li>
+      </ul>
+    </dd>
+  </xsl:template>
   
 </xsl:stylesheet>

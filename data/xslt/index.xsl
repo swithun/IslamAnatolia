@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><!-- -*- xml -*- -->
 <xsl:stylesheet
-		version="1.0" 
-		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns:tei="http://www.tei-c.org/ns/1.0"
-		xmlns:exsl="http://exslt.org/common"
-		xmlns:php="http://php.net/xsl"
-		extension-element-prefixes="exsl php"
-		xmlns:data="urn:data"
-		exclude-result-prefixes="tei data"
-		>
+    version="1.0" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:exsl="http://exslt.org/common"
+    xmlns:php="http://php.net/xsl"
+    extension-element-prefixes="exsl php"
+    xmlns:data="urn:data"
+    exclude-result-prefixes="tei data"
+    >
 
-	<!--****** xslt/index.xsl
+  <!--****** xslt/index.xsl
  * NAME
  * index.xsl
  * SYNOPSIS
@@ -25,13 +25,13 @@
  *   * xslt/facets.xsl
  *   * xslt/hits.xsl
  ****-->
-	
-	<xsl:include href="params.xsl"/>
-	<xsl:include href="templates.xsl"/>
-	<xsl:include href="facets.xsl"/>
-	<xsl:include href="hits.xsl"/>
+  
+  <xsl:include href="params.xsl"/>
+  <xsl:include href="templates.xsl"/>
+  <xsl:include href="facets.xsl"/>
+  <xsl:include href="hits.xsl"/>
 
-	<xsl:template match="response">
+  <xsl:template match="response">
     <div>
       <header class="entry-header">
         <h1 class="entry-title">Database of medieval Anatolian texts and manuscripts in Arabic, Persian and Turkish</h1>
@@ -154,68 +154,68 @@
         </div>
       </form>
     </div>
-		<!--xsl:copy-of select="/"/-->
-	</xsl:template>
-	
-	<!-- template to generate multiple DIVs for query and field controls -->
-	<xsl:template name="query_field_div">
-		<xsl:param name="qs"/>
-		<xsl:param name="fs"/>
+    <!--xsl:copy-of select="/"/-->
+  </xsl:template>
+  
+  <!-- template to generate multiple DIVs for query and field controls -->
+  <xsl:template name="query_field_div">
+    <xsl:param name="qs"/>
+    <xsl:param name="fs"/>
 
-		<!-- get current query/field -->
-		<xsl:variable name="this_query">
-			<xsl:choose>
-				<xsl:when test="contains($qs, '|')">
-					<xsl:value-of select="substring-before($qs, '|')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$qs"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+    <!-- get current query/field -->
+    <xsl:variable name="this_query">
+      <xsl:choose>
+        <xsl:when test="contains($qs, '|')">
+          <xsl:value-of select="substring-before($qs, '|')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qs"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
-		<xsl:variable name="this_field">
-			<xsl:choose>
-				<xsl:when test="contains($fs, '|')">
-					<xsl:value-of select="substring-before($fs, '|')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$fs"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		<div>
-			<p>
-				<label for="q">Query</label>
-				<input type="text" name="q[]" id="q" class="keyboardInput" value="{$this_query}"/>
-			</p>
-			
-			<p>
-				<label for="field">In</label>
-				<select id="field" name="field[]">
-					<xsl:for-each select="exsl:node-set($fields)/data:fields/data:option">
-						<option value="{@value}">
-							<xsl:if test="@value = $this_field">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="."/>
-						</option>
-					</xsl:for-each>
-				</select>
-				
-				<input type="button" value="Add" class="add_field"/>
-				<input type="button" value="Remove" class="remove_field"/>
-			</p>
-		</div>
+    <xsl:variable name="this_field">
+      <xsl:choose>
+        <xsl:when test="contains($fs, '|')">
+          <xsl:value-of select="substring-before($fs, '|')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$fs"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <div>
+      <p>
+        <label for="q">Query</label>
+        <input type="text" name="q[]" id="q" class="keyboardInput" value="{$this_query}"/>
+      </p>
+      
+      <p>
+        <label for="field">In</label>
+        <select id="field" name="field[]">
+          <xsl:for-each select="exsl:node-set($fields)/data:fields/data:option">
+            <option value="{@value}">
+              <xsl:if test="@value = $this_field">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              <xsl:value-of select="."/>
+            </option>
+          </xsl:for-each>
+        </select>
+        
+        <input type="button" value="Add" class="add_field"/>
+        <input type="button" value="Remove" class="remove_field"/>
+      </p>
+    </div>
 
-		<!-- have more queries/fields -->
-		<xsl:if test="contains($qs, '|')">
-			<xsl:call-template name="query_field_div">
-				<xsl:with-param name="qs" select="substring-after($qs, '|')"/>
-				<xsl:with-param name="fs" select="substring-after($fs, '|')"/>
-			</xsl:call-template>
-		</xsl:if>
-		
-	</xsl:template>
+    <!-- have more queries/fields -->
+    <xsl:if test="contains($qs, '|')">
+      <xsl:call-template name="query_field_div">
+        <xsl:with-param name="qs" select="substring-after($qs, '|')"/>
+        <xsl:with-param name="fs" select="substring-after($fs, '|')"/>
+      </xsl:call-template>
+    </xsl:if>
+    
+  </xsl:template>
 </xsl:stylesheet>

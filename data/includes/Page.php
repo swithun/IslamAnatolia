@@ -33,9 +33,9 @@ class Page {
      ******
      */
     public function __construct($xsltFile = "", $dom = null, $params = null) { //{{{
-				$this->xsltFile = $xsltFile;
-				$this->dom = $dom;
-				$this->params = $params;
+        $this->xsltFile = $xsltFile;
+        $this->dom = $dom;
+        $this->params = $params;
     }
     //}}}
 
@@ -49,7 +49,7 @@ class Page {
      ******
      */
     public function setXsltFile($xsltFile) { //{{{
-				$this->xsltFile = $xsltFile;
+        $this->xsltFile = $xsltFile;
     }
     //}}}
 
@@ -63,7 +63,7 @@ class Page {
      ******
      */
     public function setDom($dom) { //{{{
-				$this->dom = $dom;
+        $this->dom = $dom;
     }
     //}}}
 
@@ -77,7 +77,7 @@ class Page {
      ******
      */
     public function setParams($params) { //{{{
-				$this->params = $params;
+        $this->params = $params;
     }
     //}}}
 
@@ -91,10 +91,10 @@ class Page {
      ******
      */
     public function setRaw($raw=true) { //{{{
-				$this->raw = (boolean) $raw;
+        $this->raw = (boolean) $raw;
     }
     //}}}
-		
+    
     /****f* Page.php/__toString
      * NAME
      * __toString
@@ -108,76 +108,76 @@ class Page {
      ******
      */
     public function __toString() { //{{{
-				global $haveWP;
+        global $haveWP;
 
-				$output = "";
-				do {
-						// check for DOM
-						if (null == $this->dom) {
-								$this->dummyDom();
-						}
-						// just raw XML
-						if ($this->raw) {
-								header("Content-type: text/xml");
-								$output = $this->dom->saveXML();
-								break;
-						}
+        $output = "";
+        do {
+            // check for DOM
+            if (null == $this->dom) {
+                $this->dummyDom();
+            }
+            // just raw XML
+            if ($this->raw) {
+                header("Content-type: text/xml");
+                $output = $this->dom->saveXML();
+                break;
+            }
 
-						// need xsltFile, or use default one
-						if (!$this->xsltFile) {
-								$this->xsltFile = XSLT_DIR . "templates.xsl";
-						}
+            // need xsltFile, or use default one
+            if (!$this->xsltFile) {
+                $this->xsltFile = XSLT_DIR . "templates.xsl";
+            }
 
-						// do transform
-						$xslt = new XSLT($this->xsltFile);
+            // do transform
+            $xslt = new XSLT($this->xsltFile);
 
-						if ($this->params) {
-								$xslt->addParams($this->params);
-						}
+            if ($this->params) {
+                $xslt->addParams($this->params);
+            }
 
-						// inject path param for relative paths
-						$path = $this->resolvePath($_SERVER["REQUEST_URI"]);
-						if ($path) {
-								$xslt->addParams(array("path" => $path));
-						}
+            // inject path param for relative paths
+            $path = $this->resolvePath($_SERVER["REQUEST_URI"]);
+            if ($path) {
+                $xslt->addParams(array("path" => $path));
+            }
 
-						// get user from Shibboleth
-						$user = getUser();
-						if ($user) {
-								$xslt->addParams(array("user" => $user));
-						}
+            // get user from Shibboleth
+            $user = getUser();
+            if ($user) {
+                $xslt->addParams(array("user" => $user));
+            }
 
-						// get possible message
-						$m = $this->getMessage();
-						if ($m) {
-								$xslt->addParams(array("message" => $m["message"],
-																			 "messageClass" => $m["messageClass"]));
-						}
+            // get possible message
+            $m = $this->getMessage();
+            if ($m) {
+                $xslt->addParams(array("message" => $m["message"],
+                                       "messageClass" => $m["messageClass"]));
+            }
 
-						// transform
-						$output = $xslt->transformToXML($this->dom);
+            // transform
+            $output = $xslt->transformToXML($this->dom);
 
-						// merge with WordPress
-						if ($haveWP) {
-								// title
-								if (isset($this->params["title"])) {
-										$title = $this->params["title"];
-										add_filter("wp_title", function () use ($title) { return $title . " | ";});
-								}
+            // merge with WordPress
+            if ($haveWP) {
+                // title
+                if (isset($this->params["title"])) {
+                    $title = $this->params["title"];
+                    add_filter("wp_title", function () use ($title) { return $title . " | ";});
+                }
 
-								ob_start();
-								get_header();
-								//get_sidebar("left");
-								print sprintf('<div id="content">%s</div>', $output);
-								//get_sidebar("right");
-								get_footer();
+                ob_start();
+                get_header();
+                //get_sidebar("left");
+                print sprintf('<div id="content">%s</div>', $output);
+                //get_sidebar("right");
+                get_footer();
 
-								$output = ob_get_clean();
-						}
+                $output = ob_get_clean();
+            }
 
-				} while (false);
+        } while (false);
 
-				return $output;
+        return $output;
     }
     //}}}
 
@@ -190,9 +190,9 @@ class Page {
      ******
      */
     private function dummyDom() { //{{{
-				$this->dom = new DomDocument();
-				$root = $this->dom->createElement("table");
-				$this->dom->appendChild($root);
+        $this->dom = new DomDocument();
+        $root = $this->dom->createElement("table");
+        $this->dom->appendChild($root);
     }
     //}}}
 
@@ -209,21 +209,21 @@ class Page {
      ******
      */
     private function resolvePath($requestURI) { //{{{
-				$path = "";
-				$dirNameOfBaseURI = dirname(BASE_URI);
+        $path = "";
+        $dirNameOfBaseURI = dirname(BASE_URI);
 
-				// if file name is missing, then don't remove last element of path
-				$requestPath = "/" == substr($requestURI, -1) ?
-					$requestURI : dirname($requestURI);
+        // if file name is missing, then don't remove last element of path
+        $requestPath = "/" == substr($requestURI, -1) ?
+          $requestURI : dirname($requestURI);
 
-				// move down path until arriving at base path
-				while ("/" != $requestPath &&
-							 $dirNameOfBaseURI != dirname($requestPath)) {
-						$path .= "../";
-						$requestPath = dirname($requestPath);
-				}
+        // move down path until arriving at base path
+        while ("/" != $requestPath &&
+               $dirNameOfBaseURI != dirname($requestPath)) {
+            $path .= "../";
+            $requestPath = dirname($requestPath);
+        }
 
-				return $path;
+        return $path;
     }
     //}}}
 
@@ -237,19 +237,19 @@ class Page {
      ******
      */
     private function getMessage() { //{{{
-				$arr = null;
+        $arr = null;
 
-				do {
-						if (!isset($_REQUEST["message"]) ||
-								!isset($_REQUEST["messageClass"])) {
-								break;
-						}
+        do {
+            if (!isset($_REQUEST["message"]) ||
+                !isset($_REQUEST["messageClass"])) {
+                break;
+            }
 
-						$arr = array ("message" => $_REQUEST["message"],
-													"messageClass" => $_REQUEST["messageClass"]);
-				} while (false);
+            $arr = array ("message" => $_REQUEST["message"],
+                          "messageClass" => $_REQUEST["messageClass"]);
+        } while (false);
 
-				return $arr;
+        return $arr;
     }
     //}}}
 

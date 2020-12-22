@@ -33,9 +33,9 @@ $limit = 50;
 do {
     // q should be a word
     if (!isset($_REQUEST["q"]) || "" == $_REQUEST["q"]) {
-				$params["message"] = "No search query";
-				$params["messageClass"] = "error";
-				break;
+        $params["message"] = "No search query";
+        $params["messageClass"] = "error";
+        break;
     }
 
     // form data
@@ -47,22 +47,22 @@ do {
 
     // generate query string based on current query, but with offset removed
     if (isset($_GET["offset"])) {
-				unset($_GET["offset"]);
+        unset($_GET["offset"]);
     }
 
     $params["url"] = sprintf("%s?%s",
-														 $_SERVER["PHP_SELF"],
-														 http_build_query($_GET));
+                             $_SERVER["PHP_SELF"],
+                             http_build_query($_GET));
     $params["query"] = $query;
     $params["offset"] = $offset;
     $params["limit"] = $limit;
     $params["title"] = sprintf("Search for '%s'", $query);
     $params["search_type"] = "search";
-		
-		$searchParams = array("q" => $query);
+    
+    $searchParams = array("q" => $query);
 
     $solr = new Solr();
-				
+        
     $dom = $solr->simpleSearch($searchParams, $offset, $limit);
 
     $page->setDom($dom);

@@ -30,7 +30,7 @@ $limit = 50;
 do {
     // no form submitted, so break out
     if (!isset($_REQUEST["submit"])) {
-				break;
+        break;
     }
 
     // get form data
@@ -54,35 +54,35 @@ do {
 
     // generate query string based on current query, but with offset removed
     if (isset($_GET["offset"])) {
-				unset($_GET["offset"]);
+        unset($_GET["offset"]);
     }
 
     $params["url"] = sprintf("%s?%s",
-														 $_SERVER["PHP_SELF"],
-														 http_build_query($_GET));
+                             $_SERVER["PHP_SELF"],
+                             http_build_query($_GET));
 
     // sanity check - need a query
     if ("" == $query_ms && "" == $query_author && "" == $query_authority && "" == $query_bib) {
-				$params["message"] = "need a query";
-				$params["messageClass"] = "error";
-				break;
+        $params["message"] = "need a query";
+        $params["messageClass"] = "error";
+        break;
     }
 
     // non-MS return types require a query for that document type
     if ((AUTHORITY_TYPE == $return_type && "" == $query_author && "" == $query_authority) ||
-				(BIBLIOGRAPHY_TYPE == $return_type && "" == $query_bib)) {
-				$params["message"] = "Wrong return type for query";
-				$params["messageClass"] = "error";
-				break;
+        (BIBLIOGRAPHY_TYPE == $return_type && "" == $query_bib)) {
+        $params["message"] = "Wrong return type for query";
+        $params["messageClass"] = "error";
+        break;
     }
 
     $solr = new Solr();
     $dom = $solr->advancedSearch($query_ms,
-																 $query_author,
-																 $query_authority,
-																 $query_bib,
-																 $return_type,
-																 $offset);
+                                 $query_author,
+                                 $query_authority,
+                                 $query_bib,
+                                 $return_type,
+                                 $offset);
 
     $page->setDom($dom);
 } while (false);

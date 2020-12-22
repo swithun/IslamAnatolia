@@ -24,25 +24,25 @@ $params = array();
 
 // block for handling uploads
 do {
-		// no upload
-		if (!isset($_REQUEST["is_upload"])) {
-				break;
-		}
+    // no upload
+    if (!isset($_REQUEST["is_upload"])) {
+        break;
+    }
 
-		$fileItem = "doc"; // name of file upload form element
-		
-		// no file uploaded
-		if (!isset($_FILES[$fileItem])) {
-				$params["message"] = "No file uploaded";
-				$params["messageClass"] = "error";
-		}
+    $fileItem = "doc"; // name of file upload form element
+    
+    // no file uploaded
+    if (!isset($_FILES[$fileItem])) {
+        $params["message"] = "No file uploaded";
+        $params["messageClass"] = "error";
+    }
 
-		// have file upload, so proceed
-		$message = "";
-		$success = handleUpload($_FILES[$fileItem], $message);
-		
-		$params["message"] = $message;
-		$params["messageClass"] = $success ? "success" : "error";
+    // have file upload, so proceed
+    $message = "";
+    $success = handleUpload($_FILES[$fileItem], $message);
+    
+    $params["message"] = $message;
+    $params["messageClass"] = $success ? "success" : "error";
 } while (false);
 
 $xsltFile = XSLT_DIR . "admin_index.xsl";
@@ -50,7 +50,7 @@ $xsltFile = XSLT_DIR . "admin_index.xsl";
 $page = new Page($xsltFile);
 
 if ($params) {
-		$page->setParams($params);
+    $page->setParams($params);
 }
 
 print $page;

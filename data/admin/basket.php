@@ -28,15 +28,15 @@ require_once "../includes/msFunctions.php";
  ******
  */
 function addToBasket($hits) { //{{{
-		if (!isset($_SESSION["basket"]) || !is_array($_SESSION["basket"])) {
-				$_SESSION["basket"] = array();
-		}
-		
-		foreach ($hits as $hit) {
-				if (!in_array($hit, $_SESSION["basket"])) {
-						$_SESSION["basket"][] = $hit;
-				}
-		}
+    if (!isset($_SESSION["basket"]) || !is_array($_SESSION["basket"])) {
+        $_SESSION["basket"] = array();
+    }
+    
+    foreach ($hits as $hit) {
+        if (!in_array($hit, $_SESSION["basket"])) {
+            $_SESSION["basket"][] = $hit;
+        }
+    }
 }
 //}}}
 
@@ -50,28 +50,28 @@ function addToBasket($hits) { //{{{
  ******
  */
 function downloadZip($hits) { //{{{
-		$zip = new Zip();
-		$types = array("ms" => 1, "auth" => 2, "bib" => 3);
-		$db = new DB();
-		
-		foreach ($hits as $hit) {
-				list ($name, $type) = explode("|", $hit);
-				$type = $types[$type];
-				
-				$db->getLatestVersionByName(bin2hex($name), $type);
-				$results = $db->getResults();
-				
-				if (!$results) {
-						continue;
-				}
-				
-				$doc = $results[0];
-				$versionName = getFilename($doc['versionPath'], $doc['versionUUID']);
-				
-				$zip->addFile($versionName, $doc['documentName']);
-		}
-		
-		$zip->download();
+    $zip = new Zip();
+    $types = array("ms" => 1, "auth" => 2, "bib" => 3);
+    $db = new DB();
+    
+    foreach ($hits as $hit) {
+        list ($name, $type) = explode("|", $hit);
+        $type = $types[$type];
+        
+        $db->getLatestVersionByName(bin2hex($name), $type);
+        $results = $db->getResults();
+        
+        if (!$results) {
+            continue;
+        }
+        
+        $doc = $results[0];
+        $versionName = getFilename($doc['versionPath'], $doc['versionUUID']);
+        
+        $zip->addFile($versionName, $doc['documentName']);
+    }
+    
+    $zip->download();
 }
 //}}}
 
@@ -85,8 +85,8 @@ function downloadZip($hits) { //{{{
  ******
  */
 function viewBasket() { //{{{
-		$solr = new Solr();
-		return $solr->basketSearch($_SESSION["basket"], 0);
+    $solr = new Solr();
+    return $solr->basketSearch($_SESSION["basket"], 0);
 }
 //}}}
 
@@ -101,27 +101,27 @@ function viewBasket() { //{{{
  ******
  */
 function deleteDocuments($hitsRequest, $del=false) { //{{{
-		// hits to remove from basket
-		$hits = array();
-		
-		// loop over items to delete, remembering document names
-		foreach ($hitsRequest as $hit) {
-				list($name, $type) = explode("|", $hit);
-				if (!$type) {
-						continue;
-				}
-				
-				// delete from system?
-				if ($del) {
-						deleteDocumentByName($name, $type);
-				}
-				
-				// add to list of ones to delete from basket
-				$hits[] = $name;
-		}
-		
-		// remove remembered document names from basket
-		$_SESSION["basket"] = array_diff($_SESSION["basket"], $hits);
+    // hits to remove from basket
+    $hits = array();
+    
+    // loop over items to delete, remembering document names
+    foreach ($hitsRequest as $hit) {
+        list($name, $type) = explode("|", $hit);
+        if (!$type) {
+            continue;
+        }
+        
+        // delete from system?
+        if ($del) {
+            deleteDocumentByName($name, $type);
+        }
+        
+        // add to list of ones to delete from basket
+        $hits[] = $name;
+    }
+    
+    // remove remembered document names from basket
+    $_SESSION["basket"] = array_diff($_SESSION["basket"], $hits);
 }
 //}}}
 
@@ -130,54 +130,54 @@ $basket_xslt = XSLT_DIR . "basket.xsl";
 $url = $_SERVER["PHP_SELF"] . "?action=view";
 
 do {
-		switch ($action) {
-				// add to basket and then go back to given URL
-		 case "add":
-				if (isset($_REQUEST["hits"])) {
-						addToBasket($_REQUEST["hits"]);
-				}
-				if (isset($_REQUEST["url"])) {
-						$url = $_REQUEST["url"];
-				}
-				break;
+    switch ($action) {
+        // add to basket and then go back to given URL
+     case "add":
+        if (isset($_REQUEST["hits"])) {
+            addToBasket($_REQUEST["hits"]);
+        }
+        if (isset($_REQUEST["url"])) {
+            $url = $_REQUEST["url"];
+        }
+        break;
 
-				// delete items from system and basket
-		 case "delete":
-				if (isset($_REQUEST["confirm"]) && 1 == $_REQUEST["confirm"]
-						&& isset($_REQUEST["hits"])) {
-						deleteDocuments($_REQUEST["hits"], true);
-				}
-				break;
-				
-				// remove items from basket
-		 case "remove":
-				if (isset($_REQUEST["hits"])) {
-						deleteDocuments($_REQUEST["hits"]);
-				}
-				break;
-				
-				// download ZIP of selected items
-		 case "download":
-				if (isset($_REQUEST["hits"])) {
-						downloadZip($_REQUEST["hits"]);
-				}
-				break;
+        // delete items from system and basket
+     case "delete":
+        if (isset($_REQUEST["confirm"]) && 1 == $_REQUEST["confirm"]
+            && isset($_REQUEST["hits"])) {
+            deleteDocuments($_REQUEST["hits"], true);
+        }
+        break;
+        
+        // remove items from basket
+     case "remove":
+        if (isset($_REQUEST["hits"])) {
+            deleteDocuments($_REQUEST["hits"]);
+        }
+        break;
+        
+        // download ZIP of selected items
+     case "download":
+        if (isset($_REQUEST["hits"])) {
+            downloadZip($_REQUEST["hits"]);
+        }
+        break;
 
-				// view basket is default
-		 case "view":
-		 default:
-				$page = new Page($basket_xslt);
-				$page->setDom(viewBasket());
-				$page->setParams(array("search_type" => "basket"));
-				print $page;
-				$url = "";
-				break;
-		}
+        // view basket is default
+     case "view":
+     default:
+        $page = new Page($basket_xslt);
+        $page->setDom(viewBasket());
+        $page->setParams(array("search_type" => "basket"));
+        print $page;
+        $url = "";
+        break;
+    }
 } while (false);
 
 // redirect to $url if no headers sent yet (view/download)
 if (!headers_sent() && $url) {
-		header("Location: " . $url);
+    header("Location: " . $url);
 }
 
 ?>

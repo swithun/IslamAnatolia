@@ -33,9 +33,9 @@
     <ol>
       <!-- need start attribute -->
       <xsl:if test="$offset &gt; 0">
-	<xsl:attribute name="start">
-	  <xsl:value-of select="$offset + 1"/>
-	</xsl:attribute>
+  <xsl:attribute name="start">
+    <xsl:value-of select="$offset + 1"/>
+  </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates/>
     </ol>
@@ -58,15 +58,15 @@
   <xsl:template name="page_controls">
     <p>
       <xsl:if test="$offset &gt; 0">
-	<a href="{$url}&amp;offset={$offset - $limit}">
-	  <xsl:text>Previous</xsl:text>
-	</a>
-	<xsl:text> </xsl:text>
+  <a href="{$url}&amp;offset={$offset - $limit}">
+    <xsl:text>Previous</xsl:text>
+  </a>
+  <xsl:text> </xsl:text>
       </xsl:if>
       <xsl:if test="count(/table/row) = $limit">
-	<a href="{$url}&amp;offset={$offset + $limit}">
-	  <xsl:text>Next</xsl:text>
-	</a>
+  <a href="{$url}&amp;offset={$offset + $limit}">
+    <xsl:text>Next</xsl:text>
+  </a>
       </xsl:if>
     </p>
   </xsl:template>

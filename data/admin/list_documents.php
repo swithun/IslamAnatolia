@@ -33,10 +33,10 @@ do {
     $type = isset($_REQUEST["type"]) ? $_REQUEST["type"] : "ms";
 
     if (isset($_REQUEST["message"]) && "" != $_REQUEST["message"]) {
-				$params["message"] = $_REQUEST["message"];
+        $params["message"] = $_REQUEST["message"];
     }
     if (isset($_REQUEST["messageClass"]) && "" != $_REQUEST["messageClass"]) {
-				$params["messageClass"] = $_REQUEST["messageClass"];
+        $params["messageClass"] = $_REQUEST["messageClass"];
     }
 
     // offset
@@ -47,7 +47,7 @@ do {
 
     // remove offset from _GET
     if (isset($_GET["offset"])) {
-				unset($_GET["offset"]);
+        unset($_GET["offset"]);
     }
 
     // params
@@ -55,31 +55,31 @@ do {
     $params["offset"] = $offset;
     $params["limit"] = $limit;
     $params["url"] = sprintf("%s?%s",
-														 $_SERVER["PHP_SELF"],
-														 http_build_query($_GET));
+                             $_SERVER["PHP_SELF"],
+                             http_build_query($_GET));
     $params["search_type"] = "list";
-		$params["url"] = $_SERVER["REQUEST_URI"];
+    $params["url"] = $_SERVER["REQUEST_URI"];
 
     $solr = new Solr();
-		
-		// work out which facets to use
-		$physical_location_fields = array("country", "settlement", "institution", "repository", "collection");
-		foreach ($physical_location_fields as $field) {
-				$f = "ms_physical_location_" . $field;
+    
+    // work out which facets to use
+    $physical_location_fields = array("country", "settlement", "institution", "repository", "collection");
+    foreach ($physical_location_fields as $field) {
+        $f = "ms_physical_location_" . $field;
 
-				if (!isset($_REQUEST[$f])) {
-						$solr->addFacet($f);
-						// if these aren't set, then facet on this field and finished
-						if ("country" == $field || "settlement" == $field) {
-								break;
-						}
-				}
-				else {
-						$params[$f] = $_REQUEST[$f];
-						$searchParams[$f] = $_REQUEST[$f];
-				}
-		}
-		
+        if (!isset($_REQUEST[$f])) {
+            $solr->addFacet($f);
+            // if these aren't set, then facet on this field and finished
+            if ("country" == $field || "settlement" == $field) {
+                break;
+            }
+        }
+        else {
+            $params[$f] = $_REQUEST[$f];
+            $searchParams[$f] = $_REQUEST[$f];
+        }
+    }
+    
     $dom = $solr->getDocumentsByType($type, $offset, $limit);
     $page->setDom($dom);
 } while (false);

@@ -40,17 +40,17 @@ $sortDirection = isset($_REQUEST["sort_direction"]) ? $_REQUEST["sort_direction"
 
 // modify doctype?
 if (isset($_REQUEST["field"]) && in_array("people", $_REQUEST["field"])) {
-		$doctype = "people";
+    $doctype = "people";
 }
 else {
-		if (isset($_REQUEST["field"]) && in_array("classmark", $_REQUEST["field"])) {
-				$doctype = "ms";
-		}
-		
-		// check for used facets and remove them from list and add them to params
-		$haveFacets = removeFacets($params,
-															 $solr->getDateFormat(),
-															 $solr->getGap());
+    if (isset($_REQUEST["field"]) && in_array("classmark", $_REQUEST["field"])) {
+        $doctype = "ms";
+    }
+    
+    // check for used facets and remove them from list and add them to params
+    $haveFacets = removeFacets($params,
+                               $solr->getDateFormat(),
+                               $solr->getGap());
 }
 
 // hits per page

@@ -8,7 +8,7 @@
     xmlns:mads="http://www.loc.gov/mads/v2"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xsl:extension-element-prefixes="php"
-		exclude-result-prefixes="mods mads"
+    exclude-result-prefixes="mods mads"
     >
   
   <!--****** xslt/mods2html.xsl

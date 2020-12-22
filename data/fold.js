@@ -1288,7 +1288,7 @@ var mapping = {
     0xFF3F: '_',
     0x2053: '~',
     0xFF5E: '~',
-		0x2D: ''
+    0x2D: ''
 };
 
 /**
@@ -1399,16 +1399,16 @@ function fold(str, replacement) {
                      * Character within the ASCII range.
                      * Copy it to the output string.
                      */
-										 outStr += String.fromCharCode(charCode);
+                     outStr += String.fromCharCode(charCode);
                 } else {
-										 /*
+                     /*
                      * Character outside of the ASCII range.
                      * Look for a replacement
                      */
-										 outStr += replaceChar(charCode, replace, replacement);
+                     outStr += replaceChar(charCode, replace, replacement);
                 }
             }
         }
-		 
-		 return outStr;
+     
+     return outStr;
 }

@@ -10,7 +10,7 @@ stuff.
 
 #content {
   width: 100%;
-	min-height: 625px;
+  min-height: 625px;
 }
 
 #content h1, #content  h2, #content #content h3, #content h4, #content th, #content dd {
@@ -23,24 +23,24 @@ stuff.
 
 #content ul.navigation li, #content ul.version_list li {
   list-style: none;
-	display: inline;
-	margin: 0;
-	padding: 0;
-	margin: 0 1em;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  margin: 0 1em;
 }
 
 #content p.login {
-	float: right;
+  float: right;
 }
 
 #content p.error {
   color: #a00;
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #content p.success {
   color: #0a0;
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #content dl.hit_list em {
@@ -57,13 +57,13 @@ stuff.
 
 #content dd {
   margin-left: 2em;
-	margin-bottom: 1em;
-	line-height: 2em;
+  margin-bottom: 1em;
+  line-height: 2em;
 }
 
 #content a {
   color: #00f;
-	/*text-decoration: underline;*/
+  /*text-decoration: underline;*/
 }
 
 /* by default only show top X number of facet values  */
@@ -73,7 +73,7 @@ stuff.
 
 .work_note {
   background-color: #f7f5f2;
-	padding: 1em;
+  padding: 1em;
 }
 
 /* pretty printing 
@@ -86,46 +86,46 @@ stuff.
 /* line numbers in PRE */
 /* http://jsfiddle.net/tovic/AbpRD/ 
 #content pre {
-	margin:0 0 1em;
-	padding:.5em 1em;
+  margin:0 0 1em;
+  padding:.5em 1em;
 }
 
 #content pre code,
 #content pre .line-number {
-	font: normal normal 12px/14px "Courier New", Courier, Monospace;
-	color: black;
-	display: block;
+  font: normal normal 12px/14px "Courier New", Courier, Monospace;
+  color: black;
+  display: block;
 }
 
 #content pre .line-number {
   float: left;
-	margin: 0 1em 0 -1em;
-	border-right: 1px solid;
-	text-align: right;
+  margin: 0 1em 0 -1em;
+  border-right: 1px solid;
+  text-align: right;
 }
 
 #content pre .line-number span {
   display: block;
-	padding: 0 .5em 0 1em;
+  padding: 0 .5em 0 1em;
 }
 
 #content pre .cl {
   display: block;
-	clear: both;
+  clear: both;
 }*/
 
 /* styling for TEI overlay 
 #content div.tei_overlay {
   display: none;
-	z-index: 10000;
+  z-index: 10000;
   width: 50%;
-	height: 600px;
-	float: right;
-	overflow: auto;
+  height: 600px;
+  float: right;
+  overflow: auto;
   background-color:#eee;
-	-moz-box-shadow:0 0 90px 5px #000;
-	-webkit-box-shadow: 0 0 90px #000;
-	position:relative;
+  -moz-box-shadow:0 0 90px 5px #000;
+  -webkit-box-shadow: 0 0 90px #000;
+  position:relative;
 }*/
 
 /* close overlay button 
@@ -133,15 +133,15 @@ stuff.
   background-image: url(close.png);
  background-repeat: no-repeat;
  background-position: right top;
-	position: fixed;
-	right: 24%;
-	top: 60px;
-	cursor: pointer;
-	height: 35px;
-	width: 35px;
-	z-index:10001;
-	margin: auto;
-	
+  position: fixed;
+  right: 24%;
+  top: 60px;
+  cursor: pointer;
+  height: 35px;
+  width: 35px;
+  z-index:10001;
+  margin: auto;
+  
 }*/
 
 #content .highlight {
@@ -221,14 +221,14 @@ dd.bib_list { margin-bottom: 1em; }
 
 /*20160304 mlw2*/
 div#content dl#accordion dt.accordion_header {color: #00F; text-decoration: underline; cursor:pointer; 
-	}
-	div#content dl#accordion dt.accordion_header::before {content: "+";font-size:1.25em; display: inline-block; width: 15px; text-align:center; }
-	
-	div#content dl#accordion dt.ui-accordion-header-active {color: #F00; }
-	div#content dl#accordion dt.ui-accordion-header-active::before {content: "-"; }
+  }
+  div#content dl#accordion dt.accordion_header::before {content: "+";font-size:1.25em; display: inline-block; width: 15px; text-align:center; }
+  
+  div#content dl#accordion dt.ui-accordion-header-active {color: #F00; }
+  div#content dl#accordion dt.ui-accordion-header-active::before {content: "-"; }
 
 /* make bibliography sub-headings smaller */
 div#content dt.bib_subheading {
   font-size: smaller;
-	margin-left: 2em;
+  margin-left: 2em;
 }

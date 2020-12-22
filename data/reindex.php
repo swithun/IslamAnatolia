@@ -22,41 +22,41 @@ $message = "";
 $success = false;
 
 do {
-		// connect to databases
-		$db = new DB();
-		$solr = new Solr();
-		
-		if (!$db || !$solr) {
-				$message = "Problem connecting to databases";
-				break;
-		}
-		
-		// get latest versions
-		if (!$db->getLatestVersions()) {
-				$message = "Problem getting latest versions from DB";
-				break;
-		}
-		
-		$results = $db->getResults();
-		if (!$results) {
-				$message = "No results";
-				break;
-		}
-		
-		// reindex each one
-		foreach ($results as $doc) {
-				$dom = getDom($doc["versionPath"], $doc["versionUUID"]);
-				$error = "";
-				if (!sniffDocument($error, $dom, true)) {
-						print $error . "\n";
-				}
-		}
-		
-		$success = true;
+    // connect to databases
+    $db = new DB();
+    $solr = new Solr();
+    
+    if (!$db || !$solr) {
+        $message = "Problem connecting to databases";
+        break;
+    }
+    
+    // get latest versions
+    if (!$db->getLatestVersions()) {
+        $message = "Problem getting latest versions from DB";
+        break;
+    }
+    
+    $results = $db->getResults();
+    if (!$results) {
+        $message = "No results";
+        break;
+    }
+    
+    // reindex each one
+    foreach ($results as $doc) {
+        $dom = getDom($doc["versionPath"], $doc["versionUUID"]);
+        $error = "";
+        if (!sniffDocument($error, $dom, true)) {
+            print $error . "\n";
+        }
+    }
+    
+    $success = true;
 } while (false);
 
 if (!$success || $message) {
-		die($message);
+    die($message);
 }
 
 ?>

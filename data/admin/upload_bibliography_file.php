@@ -25,18 +25,18 @@ $message = "";
 
 // have file upload, so proceed
 if (isset($_FILES[$fileItem])) {
-		$success = handleUpload("uploadBibliographyFile", 
-														$_FILES[$fileItem], $message);
+    $success = handleUpload("uploadBibliographyFile", 
+                            $_FILES[$fileItem], $message);
 }
 
 $params = array("message" => $message ? $message : "Document/s uploaded",
-								"messageClass" => $success ? "success" : "error");
+                "messageClass" => $success ? "success" : "error");
 
 // had success, so redirect to admin page with message
 if ($success) {
-		$query = http_build_query($params);
-		header("Location: index.php?" . $query);
-		exit;
+    $query = http_build_query($params);
+    header("Location: index.php?" . $query);
+    exit;
 }
 
 // display form for upload
